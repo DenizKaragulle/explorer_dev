@@ -134,5 +134,5 @@ var Config = {
 	"SHARING_RELATED":"",
 	"SHARING_HASHTAG":"USGS",
 
-	"MAP_CLICK_HANDLER_ON":false
+	"MAP_CLICK_HANDLER_ON":true
 };

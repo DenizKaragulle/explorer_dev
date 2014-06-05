@@ -119,6 +119,7 @@ require([
 				setAppMessage(".timeline-message", Config.TIMELINE_MESSAGE);
 				setTimelineDisabledMessageStyle(Config.TIMELINE_DISABLED_BACKGROUND_COLOR, Config.TIMELINE_DISABLED_COLOR, Config.TIMELINE_DISABLED_BACKGROUND_OPACITY);
 				setAppMessage(".timelineDisableMessageContainer", Config.TIMELINE_DISABLED_MESSAGE);
+				domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
 				setTimelineContainerStyle(Config.TIMELINE_CONTAINER_BACKGROUND_COLOR);
 
 				loading = dom.byId("loadingImg");
@@ -129,11 +130,11 @@ require([
 
 				on(map, "load", mapLoadedHandler);
 				// TODO Temporary until a decision is made
-				if (Config.MAP_CLICK_HANDLER_ON) {
+				//if (Config.MAP_CLICK_HANDLER_ON) {
 					on(map, "click", mapClickHandler);
-				} else {
+				//} else {
 					on(map, "extent-change", extentChangeHandler);
-				}
+				//}
 				on(map, "update-start", showLoadingIndicator);
 				on(map, "update-end", hideLoadingIndicator);
 				on(document, ".share_facebook:click", shareFacebook);
@@ -503,7 +504,14 @@ require([
 			function extentChangeHandler(evt) {
 				var currentMapExtent = evt.extent;
 				var lod = evt.lod.level;
-				runQuery(currentMapExtent, lod);
+				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
+					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
+					domStyle.set(query(".timeline-legend-container")[0], "opacity", "1.0");
+				} else {
+					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
+					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
+				}
+				//runQuery(currentMapExtent, lod);
 			}
 
 			function runQuery(currentMapExtent, lod) {
@@ -552,24 +560,14 @@ require([
 									className = "five";
 								}
 
-								var tooltipContent = "",
-										timelineItemContent = "";
-								if (lod >= Config.THUMBNAIL_VISIBLE_THRESHHOLD) {
-									tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
-											"<div class='tooltipContainer'>" +
-											"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
-											"<div class='tooltipContent'>" + citation + "</div></div>";
+								var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
+										"<div class='tooltipContainer'>" +
+										"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
+										"<div class='tooltipContent'>" + citation + "</div></div>";
 
-									timelineItemContent = '<div class="timelineItemTooltip withThumbnail" title="' + tooltipContent + '" data-xmin="' + xmin + '" data-ymin="' + ymin + '" data-xmax="' + xmax + '" data-ymax="' + ymax + '">' +
-											'<span class="thumbnailLabel">' + mapName + '</span><br >' +
-											'<img class="timeline-content-image" data-tooltip="' + mapName + '" data-scale="' + scale + '" data-dateCurrent="' + dateCurrent + '" data-imprintYear="' + imprintYear + '" src="' + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + '"></div>';
-								} else {
-									tooltipContent = "<div class='tooltipContainer'>" +
-											"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
-											"<div class='tooltipContent'>" + citation + "</div></div>";
-									timelineItemContent = '<div class="timelineItemTooltip noThumbnail" title="' + tooltipContent + '" data-xmin="' + xmin + '" data-ymin="' + ymin + '" data-xmax="' + xmax + '" data-ymax="' + ymax + '">' +
-											'<span class="thumbnailLabel">' + mapName + '</span>';
-								}
+								var timelineItemContent = '<div class="timelineItemTooltip noThumbnail" title="' + tooltipContent + '" data-xmin="' + xmin + '" data-ymin="' + ymin + '" data-xmax="' + xmax + '" data-ymax="' + ymax + '">' +
+										'<span class="thumbnailLabel">' + mapName + '</span>';
+
 
 								timelineData.push({
 									"start":new Date(dateCurrent, 0, 0),
