@@ -1,4 +1,3 @@
-explorer_dev
+USGS Archival Topographic Map Explorer (dev)
 ============
 
-USGS Archival Topographic Map Explorer
