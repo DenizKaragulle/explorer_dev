@@ -48,12 +48,13 @@ require([
 	"esri/map",
 	"esri/symbols/SimpleFillSymbol",
 	"esri/symbols/SimpleLineSymbol",
+	"esri/symbols/SimpleMarkerSymbol",
 	"esri/Color",
 	"esri/tasks/query",
 	"esri/tasks/QueryTask",
 	"esri/urlUtils",
 	"dojo/domReady!"],
-		function (array, declare, fx, lang, win, Deferred, aspect, dom, domAttr, domClass, domConstruct, domGeom, domStyle, ioQuery, json, mouse, number, on, parser, all, query, ready, topic, Observable, Memory, win, DnD, Grid, editor, Selection, Keyboard, mouseUtil, Button, HorizontalSlider, BorderContainer, ContentPane, registry, arcgisUtils, Geocoder, Extent, SpatialReference, Graphic, ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ImageServiceParameters, MosaicRule, Map, SimpleFillSymbol, SimpleLineSymbol, Color, Query, QueryTask, urlUtils) {
+		function (array, declare, fx, lang, win, Deferred, aspect, dom, domAttr, domClass, domConstruct, domGeom, domStyle, ioQuery, json, mouse, number, on, parser, all, query, ready, topic, Observable, Memory, win, DnD, Grid, editor, Selection, Keyboard, mouseUtil, Button, HorizontalSlider, BorderContainer, ContentPane, registry, arcgisUtils, Geocoder, Extent, SpatialReference, Graphic, ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ImageServiceParameters, MosaicRule, Map, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Color, Query, QueryTask, urlUtils) {
 
 			var map,
 
@@ -95,7 +96,11 @@ require([
 
 					legendNode,
 
-					showFill;
+					showFill,
+
+					crosshairSymbol,
+					crosshairGraphic,
+					crosshairGraphicMp;
 
 			ready(function () {
 				parser.parse();
@@ -153,38 +158,38 @@ require([
 
 				columns = [
 					{
-						label: " ",
-						field: "objID",
-						hidden: true
+						label:" ",
+						field:"objID",
+						hidden:true
 					},
 					{
-						label: " ",
-						field: "name",
-						renderCell: thumbnailRenderCell
+						label:" ",
+						field:"name",
+						renderCell:thumbnailRenderCell
 					},
 					editor({
-						label: " ",
-						field: "transparency",
-						editorArgs: {
-							value: 1.0,
-							minimum: 0,
-							maximum: 1.0,
-							intermediateChanges: true
+						label:" ",
+						field:"transparency",
+						editorArgs:{
+							value:1.0,
+							minimum:0,
+							maximum:1.0,
+							intermediateChanges:true
 						}
 					}, HorizontalSlider)
 				];
 
 				grid = new (declare([Grid, Selection, DnD, Keyboard]))({
-					store: store = createOrderedStore(storeData, {
-						idProperty: "objID"
+					store:store = createOrderedStore(storeData, {
+						idProperty:"objID"
 					}),
-					columns: columns,
-					showHeader: false,
-					selectionMode: "single",
-					dndParams: {
-						singular: true
+					columns:columns,
+					showHeader:false,
+					selectionMode:"single",
+					dndParams:{
+						singular:true
 					},
-					getObjectDndType: function (item) {
+					getObjectDndType:function (item) {
 						return [item.type ? item.type : this.dndSourceType];
 					}
 				}, "grid");
@@ -195,19 +200,19 @@ require([
 
 				// timeline options
 				timelineOptions = {
-					"width": "100%",
-					"height": Config.TIMELINE_HEIGHT + "px",
-					"style": Config.TIMELINE_STYLE,
-					"showNavigation": Config.TIMELINE_SHOW_NAVIGATION,
-					"max": new Date(Config.TIMELINE_MAX_DATE, 0, 0),
-					"min": new Date(Config.TIMELINE_MIN_DATE, 0, 0),
-					"scale": links.Timeline.StepDate.SCALE.YEAR,
-					"step": Config.TIMELINE_STEP,
-					"stackEvents": true,
-					"zoomMax": Config.TIMELINE_ZOOM_MAX,
-					"zoomMin": Config.TIMELINE_ZOOM_MIN,
-					"cluster": Config.TIMELINE_CLUSTER,
-					"animate": Config.TIMELINE_ANIMATE
+					"width":"100%",
+					"height":Config.TIMELINE_HEIGHT + "px",
+					"style":Config.TIMELINE_STYLE,
+					"showNavigation":Config.TIMELINE_SHOW_NAVIGATION,
+					"max":new Date(Config.TIMELINE_MAX_DATE, 0, 0),
+					"min":new Date(Config.TIMELINE_MIN_DATE, 0, 0),
+					"scale":links.Timeline.StepDate.SCALE.YEAR,
+					"step":Config.TIMELINE_STEP,
+					"stackEvents":true,
+					"zoomMax":Config.TIMELINE_ZOOM_MAX,
+					"zoomMin":Config.TIMELINE_ZOOM_MIN,
+					"cluster":Config.TIMELINE_CLUSTER,
+					"animate":Config.TIMELINE_ANIMATE
 				};
 
 				legendNode = query(".topo-legend")[0];
@@ -217,7 +222,7 @@ require([
 
 				showFill = 0.0;
 				var showFillBool = false;
-				on(query(".header-title")[0], "click", function(evt) {
+				on(query(".header-title")[0], "click", function (evt) {
 					if (showFillBool) {
 						showFillBool = false;
 						showFill = 0.0;
@@ -226,6 +231,12 @@ require([
 						showFill = 0.20;
 					}
 				});
+				//crosshairSymbol = new SimpleMarkerSymbol().setStyle(SimpleMarkerSymbol.STYLE_SOLID).setColor(new Color([c, 0.04]));
+				//crosshairSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, new Color([255,0,0]), 2), new Color([255,255,0,0.25]));
+				crosshairSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 13,
+						new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
+								new Color([255, 0, 24]), 0.35),
+						new Color([255, 0, 24, 0.35]));
 			});
 
 			function documentClickHandler(e) {
@@ -242,8 +253,8 @@ require([
 				if (urlQueryObject) {
 					var _tmpFilters = urlQueryObject.f.split("|");
 					var num = number.format(legendItem.value, {
-						places: 0,
-						pattern: '#'
+						places:0,
+						pattern:'#'
 					});
 					var i = _tmpFilters.indexOf(num);
 					if (_tmpFilters[i] !== undefined) {
@@ -365,34 +376,34 @@ require([
 									dateCurrent = Config.MSG_UNKNOWN;
 								var scale = feature.attributes.Map_Scale;
 								scale = number.format(scale, {
-									places: 0
+									places:0
 								});
 
 								var mosaicRule = new MosaicRule({
-									"method": MosaicRule.METHOD_CENTER,
-									"ascending": true,
-									"operation": MosaicRule.OPERATION_FIRST,
-									"where": "OBJECTID = " + objID
+									"method":MosaicRule.METHOD_CENTER,
+									"ascending":true,
+									"operation":MosaicRule.OPERATION_FIRST,
+									"where":"OBJECTID = " + objID
 								});
 
 								params = new ImageServiceParameters();
 								params.noData = 0;
 								params.mosaicRule = mosaicRule;
 								imageServiceLayer = new ArcGISImageServiceLayer(IMAGE_SERVICE_URL, {
-									imageServiceParameters: params,
-									opacity: 1.0
+									imageServiceParameters:params,
+									opacity:1.0
 								});
 								layers.push(imageServiceLayer);
 
 								store.put({
-									id: "1",
-									objID: objID,
-									layer: imageServiceLayer,
-									name: mapName,
-									imprintYear: dateCurrent,
-									scale: scale,
-									downloadLink: DOWNLOAD_PATH + downloadIds[index],
-									extent: extent
+									id:"1",
+									objID:objID,
+									layer:imageServiceLayer,
+									name:mapName,
+									imprintYear:dateCurrent,
+									scale:scale,
+									downloadLink:DOWNLOAD_PATH + downloadIds[index],
+									extent:extent
 								});
 							});// End forEach
 							return layers.reverse();
@@ -511,8 +522,15 @@ require([
 
 			function mapClickHandler(evt) {
 				var currentMapExtent = map.extent;
+				var mp = evt.mapPoint;
+				crosshairGraphicMp = mp;
 				var lod = map.getLevel();
-				runQuery(currentMapExtent, lod);
+				if (crosshairGraphic) {
+					map.graphics.remove(crosshairGraphic);
+				}
+				crosshairGraphic = new Graphic(crosshairGraphicMp, crosshairSymbol);
+				map.graphics.add(crosshairGraphic);
+				runQuery(currentMapExtent, mp, lod);
 			}
 
 			function extentChangeHandler(evt) {
@@ -525,10 +543,10 @@ require([
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
 				}
-				//runQuery(currentMapExtent, lod);
+				//runQuery(currentMapExtent, mp, lod);
 			}
 
-			function runQuery(currentMapExtent, lod) {
+			function runQuery(currentMapExtent, mp, lod) {
 				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
 					domStyle.set("timeline", "opacity", "1.0");
 					query(".timelineDisableMessageContainer").style("display", "none");
@@ -539,7 +557,13 @@ require([
 					q.outFields = OUTFIELDS;
 					q.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
 					q.where = "IsDefault = 1";
-					q.geometry = currentMapExtent.expand(Config.EXTENT_EXPAND);
+					if (Config.QUERY_GEOMETRY === "MAP_POINT") {
+						q.geometry = mp;
+						console.log("MAP POINT");
+					} else {
+						q.geometry = currentMapExtent.expand(Config.EXTENT_EXPAND);
+						console.log("EXTENT");
+					}
 
 					var deferred = qt.execute(q).addCallback(function (response) {
 						timelineData = [];
@@ -584,12 +608,12 @@ require([
 
 
 								timelineData.push({
-									"start": new Date(dateCurrent, 0, 0),
-									"content": timelineItemContent,
-									"objID": objID,
-									"downloadLink": downloadLink,
-									"scale": scale,
-									"className": className
+									"start":new Date(dateCurrent, 0, 0),
+									"content":timelineItemContent,
+									"objID":objID,
+									"downloadLink":downloadLink,
+									"scale":scale,
+									"className":className
 								});
 							}); // END forEach
 						} else {
@@ -617,16 +641,16 @@ require([
 				var tooltipContent = "<span class='tooltipContainer'>" + mapName + "</span>";
 
 				var node = domConstruct.create("div", {
-					"class": "renderedCell",
-					"innerHTML": "<button class='rm-layer-btn' data-objectid='" + objID + "'> X </button>" +
+					"class":"renderedCell",
+					"innerHTML":"<button class='rm-layer-btn' data-objectid='" + objID + "'> X </button>" +
 							"<img class='rm-layer-icon' src='" + imgSrc + "'>" +
 							"<div class='thumbnailMapName'>" + mapName + "</div>" +
 							"<div class='thumbnailMapImprintYear'>" + imprintYear + "</div>" +
 							"<div class='downloadLink'><a href='" + downloadLink + "' target='_parent'>download map</a></div>",
-					onclick: function (evt) {
+					onclick:function (evt) {
 						var objID = evt.target.getAttribute("data-objectid");
 						var storeObj = store.query({
-							objID: objID
+							objID:objID
 						});
 
 						map.removeLayer(storeObj[0].layer);
@@ -635,7 +659,7 @@ require([
 							hideGrid();
 							map.graphics.remove(mouseOverGraphic);
 							map.graphics.clear();
-
+							addCrosshair();
 						}
 					}
 				});
@@ -681,10 +705,10 @@ require([
 				}
 
 				$(".timelineItemTooltip").tooltipster({
-					theme: "tooltipster-shadow",
-					contentAsHTML: true,
-					position: "right",
-					offsetY: 20
+					theme:"tooltipster-shadow",
+					contentAsHTML:true,
+					position:"right",
+					offsetY:20
 				});
 
 				$(".timeline-event").mouseenter(function (evt) {
@@ -700,7 +724,7 @@ require([
 						xmax = evt.target.children[0].children[0].getAttribute("data-xmax");
 						ymin = evt.target.children[0].children[0].getAttribute("data-ymin");
 						ymax = evt.target.children[0].children[0].getAttribute("data-ymax");
-						extent = new Extent(xmin, ymin, xmax, ymax, new SpatialReference({ wkid: 102100 }));
+						extent = new Extent(xmin, ymin, xmax, ymax, new SpatialReference({ wkid:102100 }));
 						sfs = createMouseOverGraphic(
 								new Color([Config.IMAGE_BORDER_COLOR_R, Config.IMAGE_BORDER_COLOR_G, Config.IMAGE_BORDER_COLOR_B, Config.IMAGE_BORDER_OPACITY]),
 								new Color([Config.IMAGE_FILL_COLOR_R, Config.IMAGE_FILL_COLOR_G, Config.IMAGE_FILL_COLOR_B, showFill]));
@@ -710,7 +734,7 @@ require([
 					// TODO
 					var data = evt.currentTarget.childNodes[0].childNodes[0].dataset;
 					if (data) {
-						extent = new Extent(data.xmin, data.ymin, data.xmax, data.ymax, new SpatialReference({ wkid: 102100 }));
+						extent = new Extent(data.xmin, data.ymin, data.xmax, data.ymax, new SpatialReference({ wkid:102100 }));
 						sfs = createMouseOverGraphic(
 								new Color([Config.IMAGE_BORDER_COLOR_R, Config.IMAGE_BORDER_COLOR_G, Config.IMAGE_BORDER_COLOR_B, Config.IMAGE_BORDER_OPACITY]),
 								new Color([Config.IMAGE_FILL_COLOR_R, Config.IMAGE_FILL_COLOR_G, Config.IMAGE_FILL_COLOR_B, showFill]));
@@ -718,7 +742,9 @@ require([
 						map.graphics.add(mouseOverGraphic);
 					}
 				}).mouseleave(function () {
+							map.graphics.remove(mouseOverGraphic);
 							map.graphics.clear();
+							addCrosshair();
 						});
 			}
 
@@ -730,7 +756,7 @@ require([
 						var objID = timelineData[row].objID;
 						// check to see if the timeline item is currently selected
 						var objIDs = store.query({
-							objID: objID
+							objID:objID
 						});
 
 						if (objIDs.length < 1) {
@@ -750,21 +776,21 @@ require([
 									dateCurrent = Config.MSG_UNKNOWN;
 								var scale = rs.features[0].attributes.Map_Scale;
 								scale = number.format(scale, {
-									places: 0
+									places:0
 								});
 
 								var mosaicRule = new MosaicRule({
-									"method": MosaicRule.METHOD_CENTER,
-									"ascending": true,
-									"operation": MosaicRule.OPERATION_FIRST,
-									"where": whereClause
+									"method":MosaicRule.METHOD_CENTER,
+									"ascending":true,
+									"operation":MosaicRule.OPERATION_FIRST,
+									"where":whereClause
 								});
 								params = new ImageServiceParameters();
 								params.noData = 0;
 								params.mosaicRule = mosaicRule;
 								imageServiceLayer = new ArcGISImageServiceLayer(IMAGE_SERVICE_URL, {
-									imageServiceParameters: params,
-									opacity: 1.0
+									imageServiceParameters:params,
+									opacity:1.0
 								});
 								map.addLayer(imageServiceLayer);
 
@@ -774,20 +800,20 @@ require([
 									_firstRow = rowId.split("-")[2];
 								}
 								var firstRowObj = store.query({
-									objID: _firstRow
+									objID:_firstRow
 								});
 
 								store.put({
-									id: "1",
-									objID: objID,
-									layer: imageServiceLayer,
-									name: mapName,
-									imprintYear: dateCurrent,
-									scale: scale,
-									downloadLink: downloadLink,
-									extent: extent
+									id:"1",
+									objID:objID,
+									layer:imageServiceLayer,
+									name:mapName,
+									imprintYear:dateCurrent,
+									scale:scale,
+									downloadLink:downloadLink,
+									extent:extent
 								}, {
-									before: firstRowObj[0]
+									before:firstRowObj[0]
 								});
 							}); // END execute
 							showGrid();
@@ -804,14 +830,14 @@ require([
 
 			function createOrderedStore(data, options) {
 				// Instantiate a Memory store modified to support ordering.
-				return Observable(new Memory(lang.mixin({data: data,
-					idProperty: "id",
-					put: function (object, options) {
+				return Observable(new Memory(lang.mixin({data:data,
+					idProperty:"id",
+					put:function (object, options) {
 						object.id = calculateOrder(this, object, options && options.before);
 						return Memory.prototype.put.call(this, object, options);
 					},
 					// Memory's add does not need to be augmented since it calls put
-					copy: function (object, options) {
+					copy:function (object, options) {
 						// summary:
 						//		Given an item already in the store, creates a copy of it.
 						//		(i.e., shallow-clones the item sans id, then calls add)
@@ -832,10 +858,10 @@ require([
 						}
 						this.add(obj, options);
 					},
-					query: function (query, options) {
+					query:function (query, options) {
 						options = options || {};
 						options.sort = [
-							{attribute: "id"}
+							{attribute:"id"}
 						];
 						return Memory.prototype.query.call(this, query, options);
 					}
@@ -885,20 +911,20 @@ require([
 					_lod = Config.BASEMAP_INIT_ZOOM;
 				}
 				map = new Map("map", {
-					basemap: Config.BASEMAP_STYLE,
-					center: [_lng, _lat],
-					zoom: _lod
+					basemap:Config.BASEMAP_STYLE,
+					center:[_lng, _lat],
+					zoom:_lod
 				});
 			}
 
 			function initGeocoderDijit(srcRef) {
 				geocoder = new Geocoder({
-					map: map,
-					autoComplete: true,
-					showResults: true,
-					searchDelay: 250,
-					arcgisGeocoder: {
-						placeholder: Config.GEOCODER_PLACEHOLDER_TEXT
+					map:map,
+					autoComplete:true,
+					showResults:true,
+					searchDelay:250,
+					arcgisGeocoder:{
+						placeholder:Config.GEOCODER_PLACEHOLDER_TEXT
 					}
 				}, srcRef);
 				geocoder.startup();
@@ -908,6 +934,14 @@ require([
 				var sfs = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID,
 						new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, borderColor, Config.IMAGE_BORDER_WIDTH), fillColor);
 				return sfs;
+			}
+
+			function addCrosshair() {
+				if (crosshairGraphic) {
+					map.graphics.remove(crosshairGraphic);
+				}
+				crosshairGraphic = new Graphic(crosshairGraphicMp, crosshairSymbol);
+				map.graphics.add(crosshairGraphic);
 			}
 
 			function hideGrid() {
@@ -946,6 +980,7 @@ require([
 			function dgridLeaveCellHandler(evt) {
 				map.graphics.remove(mouseOverGraphic);
 				map.graphics.clear();
+				addCrosshair();
 				//var slider = query(".dijitSliderH")[0];
 				//domStyle.set(slider, "opacity", "0.35");
 			}
@@ -991,8 +1026,8 @@ require([
 			function fadeIn(node) {
 				var _node = query(node)[0];
 				var fadeArgs = {
-					node: _node,
-					duration: 600
+					node:_node,
+					duration:600
 				};
 				fx.fadeIn(fadeArgs).play();
 			}
@@ -1000,8 +1035,8 @@ require([
 			function fadeOut(node) {
 				var _node = query(node)[0];
 				var fadeArgs = {
-					node: _node,
-					duration: 600
+					node:_node,
+					duration:600
 				};
 				fx.fadeOut(fadeArgs).play();
 			}
@@ -1035,10 +1070,10 @@ require([
 				$.getJSON(
 						bitlyUrl,
 						{
-							"format": "json",
-							"apiKey": "R_14fc9f92e48f7c78c21db32bd01f7014",
-							"login": "esristorymaps",
-							"longUrl": targetUrl
+							"format":"json",
+							"apiKey":"R_14fc9f92e48f7c78c21db32bd01f7014",
+							"login":"esristorymaps",
+							"longUrl":targetUrl
 						},
 						function (response) {
 							if (!response || !response || !response.data.url)
@@ -1071,10 +1106,10 @@ require([
 				$.getJSON(
 						bitlyUrl,
 						{
-							"format": "json",
-							"apiKey": "R_14fc9f92e48f7c78c21db32bd01f7014",
-							"login": "esristorymaps",
-							"longUrl": targetUrl
+							"format":"json",
+							"apiKey":"R_14fc9f92e48f7c78c21db32bd01f7014",
+							"login":"esristorymaps",
+							"longUrl":targetUrl
 						},
 						function (response) {
 							if (!response || !response || !response.data.url)
