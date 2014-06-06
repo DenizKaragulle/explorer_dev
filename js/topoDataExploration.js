@@ -233,7 +233,7 @@ require([
 				});
 				//crosshairSymbol = new SimpleMarkerSymbol().setStyle(SimpleMarkerSymbol.STYLE_SOLID).setColor(new Color([c, 0.04]));
 				//crosshairSymbol = new SimpleFillSymbol(SimpleFillSymbol.STYLE_SOLID, new SimpleLineSymbol(SimpleLineSymbol.STYLE_DASHDOT, new Color([255,0,0]), 2), new Color([255,255,0,0.25]));
-				crosshairSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CIRCLE, 13,
+				crosshairSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 13,
 						new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID,
 								new Color([255, 0, 24]), 0.35),
 						new Color([255, 0, 24, 0.35]));
@@ -547,6 +547,7 @@ require([
 			}
 
 			function runQuery(currentMapExtent, mp, lod) {
+				console.log(mp);
 				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
 					domStyle.set("timeline", "opacity", "1.0");
 					query(".timelineDisableMessageContainer").style("display", "none");
