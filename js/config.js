@@ -5,7 +5,7 @@ var Config = {
 	/******** Application header/banner ********/
 	/* Header/Banner background color (rgb or hex) */
 	"HEADER_HEIGHT": "70px",
-	"APP_HEADER_BACKGROUND_COLOR":"rgb(8, 68, 0)",
+	"APP_HEADER_BACKGROUND_COLOR":"#304b3c",
 	/* Header text color */
 	"APP_HEADER_TEXT_COLOR":"white",
 	/* Header text size */
@@ -26,12 +26,12 @@ var Config = {
 	"STEP_TWO_MESSAGE":"<span style='font-weight: bold'>Slide</span> transparency on map to compare, or drag/drop to re-order maps.",
 	"STEP_TWO_HALF_CIRCLE_MSG":"2",
 
-	"HALF_CIRCLE_BACKGROUND_COLOR" : "rgb(193, 194, 193)",
+	"HALF_CIRCLE_BACKGROUND_COLOR" : "#92b3a0",
 	"HALF_CIRCLE_COLOR" : "white",
 	"HALF_CIRCLE_OPACITY" : "1.0",
 
 	/* Timeline Container */
-	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "rgb(242, 252, 242)",
+	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "#e0ede4",
 
 	"TIMELINE_MESSAGE":"<span style='font-weight: bold'>Click</span> on a map title in the timeline to display the map.",
 
@@ -119,13 +119,13 @@ var Config = {
 	"DOWNLOAD_PATH":"http://ims.er.usgs.gov/gda_services/download?item_id=",
 
 	/* Mouseover/Mouseout graphic styles (FILL and BORDER) */
-	"IMAGE_FILL_COLOR_R": 255,
-	"IMAGE_FILL_COLOR_G": 255,
-	"IMAGE_FILL_COLOR_B": 0,
+	"IMAGE_FILL_COLOR_R": 146,
+	"IMAGE_FILL_COLOR_G": 179,
+	"IMAGE_FILL_COLOR_B": 160,
 	"IMAGE_FILL_OPACITY":0.0,
-	"IMAGE_BORDER_COLOR_R": 0,
-	"IMAGE_BORDER_COLOR_G": 0,
-	"IMAGE_BORDER_COLOR_B": 255,
+	"IMAGE_BORDER_COLOR_R": 48,
+	"IMAGE_BORDER_COLOR_G": 75,
+	"IMAGE_BORDER_COLOR_B": 60,
 	"IMAGE_BORDER_OPACITY":1.0,
 	"IMAGE_BORDER_WIDTH":1.75,
 
