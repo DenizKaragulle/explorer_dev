@@ -228,7 +228,7 @@ require([
 						showFill = 0.0;
 					} else {
 						showFillBool = true;
-						showFill = 0.20;
+						showFill = 0.10;
 					}
 				});
 				//crosshairSymbol = new SimpleMarkerSymbol().setStyle(SimpleMarkerSymbol.STYLE_SOLID).setColor(new Color([c, 0.04]));
@@ -465,11 +465,17 @@ require([
 			function filterData(dataToFilter, filter) {
 				var filteredData = [];
 				var exclude = false;
+
+				var tmp = number.parse(filter[0]);
+				var arr = $.grep(dataToFilter, function (item, i) {
+					return (item.scale > 24000 && item.scale <= 62500);
+				});
+
 				array.forEach(dataToFilter, function (item) {
 					for (var i = 0; i < filter.length; i++) {
-						var currentFilter = number.parse(filter[i]);
-						var currentScale = item.scale;
-						var filterPosition = array.indexOf(scales, currentFilter);
+						var _filterScale = number.parse(filter[i]);
+						var _scale = item.scale;
+						var filterPosition = array.indexOf(scales, _filterScale);
 
 						var lowerBound, upperBound, current;
 						if (filterPosition !== -1) {
@@ -491,25 +497,27 @@ require([
 						}
 
 						if (lowerBound === "") {
-							if (currentScale <= currentFilter) {
+							if (_scale <= _filterScale) {
 								exclude = true;
 								break;
 							}
 						}
 
 						if (upperBound === "") {
-							if (currentScale >= currentFilter) {
+							if (_scale >= _filterScale) {
 								exclude = true;
 								break;
 							}
 						}
 
 						if (lowerBound !== "" && upperBound !== "") {
-							if (currentScale > lowerBound && currentScale < upperBound) {
+							if (_scale > lowerBound && _scale < upperBound) {
 								exclude = true;
 								break;
 							}
 						}
+
+						console.log("lowerBound: " + lowerBound + "\t" + _scale + "\t" + "upperBound: " + upperBound);
 					}
 
 					if (!exclude) {
@@ -543,11 +551,9 @@ require([
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
 				}
-				//runQuery(currentMapExtent, mp, lod);
 			}
 
 			function runQuery(currentMapExtent, mp, lod) {
-				console.log(mp);
 				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
 					domStyle.set("timeline", "opacity", "1.0");
 					query(".timelineDisableMessageContainer").style("display", "none");
@@ -560,16 +566,21 @@ require([
 					q.where = "IsDefault = 1";
 					if (Config.QUERY_GEOMETRY === "MAP_POINT") {
 						q.geometry = mp;
-						console.log("MAP POINT");
 					} else {
 						q.geometry = currentMapExtent.expand(Config.EXTENT_EXPAND);
-						console.log("EXTENT");
 					}
 
+					showLoadingIndicator();
 					var deferred = qt.execute(q).addCallback(function (response) {
 						timelineData = [];
 						var nFeatures = response.features.length;
+
 						if (nFeatures > 0) {
+							/*console.log(TOPO_MAP_SCALES[0].value); // 250000
+							 console.log(TOPO_MAP_SCALES[1].value); // 125000
+							 console.log(TOPO_MAP_SCALES[2].value); // 63360
+							 console.log(TOPO_MAP_SCALES[3].value); // 24000
+							 console.log(TOPO_MAP_SCALES[4].value); // 12000*/
 							array.forEach(response.features, function (feature) {
 								var ext = feature.geometry.getExtent();
 								var xmin = ext.xmin;
@@ -587,16 +598,16 @@ require([
 
 								// TODO Hard-coded for now
 								var className = "";
-								if (scale <= TOPO_MAP_SCALES[4].value) {
-									className = "one";
-								} else if (scale > TOPO_MAP_SCALES[4].value && scale <= TOPO_MAP_SCALES[3].value) {
-									className = "two";
-								} else if (scale > TOPO_MAP_SCALES[3].value && scale <= TOPO_MAP_SCALES[2].value) {
-									className = "three";
-								} else if (scale > TOPO_MAP_SCALES[2].value && scale <= TOPO_MAP_SCALES[1].value) {
-									className = "four";
-								} else if (scale >= TOPO_MAP_SCALES[0].value) {
-									className = "five";
+								if (scale <= 12000) {
+									className = "one";	// 0 - 12000		purple
+								} else if (scale > 12000 && scale <= 24000) {
+									className = "two";	// 12001 - 24000	blue
+								} else if (scale > 24000 && scale <= 62500) {
+									className = "three";// 24001 - 63360	green
+								} else if (scale > 62500 && scale <= 125000) {
+									className = "four";	// 63361 - 125000	yellow
+								} else if (scale >= 125000) {
+									className = "five";	// 125000 - 250000	red
 								}
 
 								var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
@@ -619,9 +630,9 @@ require([
 							}); // END forEach
 						} else {
 
-						}
+						} // END QUERY
 						drawTimeline(timelineData);
-					}); // END QUERY
+					}); // END Deferred
 				} else {
 					domStyle.set("timeline", "opacity", "0.65");
 					query(".timelineDisableMessageContainer").style("display", "block");
@@ -629,7 +640,7 @@ require([
 			}
 
 			function mapLoadedHandler() {
-				console.log("mapLoadedHandler");
+				//console.log("mapLoadedHandler");
 			}
 
 			function thumbnailRenderCell(object, data, td, options) {
@@ -661,6 +672,7 @@ require([
 							map.graphics.remove(mouseOverGraphic);
 							map.graphics.clear();
 							addCrosshair();
+							hideLoadingIndicator();
 						}
 					}
 				});
@@ -747,6 +759,7 @@ require([
 							map.graphics.clear();
 							addCrosshair();
 						});
+				hideLoadingIndicator();
 			}
 
 			function onSelect() {
