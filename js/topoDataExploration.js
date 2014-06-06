@@ -223,7 +223,11 @@ require([
 						showFill = 0.0;
 					} else {
 						showFillBool = true;
+<<<<<<< HEAD
 						showFill = 0.20;
+=======
+						showFill = 0.05;
+>>>>>>> 2421a1b769e9b0b971cf381f48158baf261c20d1
 					}
 				});
 			});
