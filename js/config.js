@@ -31,7 +31,7 @@ var Config = {
 	"HALF_CIRCLE_OPACITY" : "1.0",
 
 	/* Timeline Container */
-	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "#e0ede4",
+	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "rgba(224, 237, 228, 0.75)",
 
 	"TIMELINE_MESSAGE":"<span style='font-weight: bold'>Click</span> on a map title in the timeline to display the map.",
 
@@ -40,31 +40,31 @@ var Config = {
 		{
 			"label":"250,000",
 			"value":250000,
-			"color":"#031D05",
+			"color":"#5D7370",
 			"className":"five"
 		},
 		{
 			"label":"125,000",
 			"value":125000,
-			"color":"#0B330D",
+			"color":"#7FA6A1",
 			"className":"four"
 		},
 		{
 			"label":"62,500",
 			"value":62500,
-			"color":"#1F4C21",
+			"color":"#B8D9B8",
 			"className":"three"
 		},
 		{
 			"label":"24,000",
 			"value":24000,
-			"color":"#3A653C",
+			"color":"#D6EDBD",
 			"className":"two"
 		},
 		{
 			"label":"12,000",
 			"value":12000,
-			"color":"#5B865D",
+			"color":"#cac98f",
 			"className":"one"
 		}
 	],

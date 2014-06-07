@@ -58,27 +58,27 @@ div.timeline-event-line.notInScale {
 }
 
 div.timeline-event-box.one {
-	background-color: #5B865D;
-	color: #f9f9f9;
+	background-color: #cac98f;
+	color: #333;
 }
 
 div.timeline-event-box.two {
-	background-color: #3A653C;
-	color: #f9f9f9;
+	background-color: #D6EDBD;
+	color: #666;
 }
 
 div.timeline-event-box.three {
-	background-color: #1F4C21;
-	color: #f9f9f9;
+	background-color: #B8D9B8;
+	color: #666;
 }
 
 div.timeline-event-box.four {
-	background-color: #0B330D;
+	background-color: #7FA6A1;
 	color: #f9f9f9;
 }
 
 div.timeline-event-box.five {
-	background-color: #031D05;
+	background-color: #5D7370;
 	color: #f9f9f9;
 }
 
