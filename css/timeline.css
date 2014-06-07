@@ -111,7 +111,7 @@ div.timeline-event-line {
 }
 
 div.timeline-event-content {
-    margin: 5px;
+    margin: 2px;
     overflow: hidden;
     white-space: nowrap;
 }
