@@ -38,33 +38,33 @@ var Config = {
 	"TIMELINE_LEGEND_HEADER":"Historical Map Scales",
 	"TIMELINE_LEGEND_VALUES":[
 		{
-			"label":"250,000",
+			"label":"125,001 - 250,000",
 			"value":250000,
-			"color":"#004ED7",
+			"color":"#031D05",
 			"className":"five"
 		},
 		{
-			"label":"125,000",
+			"label":"62,501 - 125,000",
 			"value":125000,
-			"color":"#0075C4",
+			"color":"#0B330D",
 			"className":"four"
 		},
 		{
-			"label":"62,500",
+			"label":"24,001 - 62,500",
 			"value":62500,
-			"color":"#009CB0",
+			"color":"#1F4C21",
 			"className":"three"
 		},
 		{
-			"label":"24,000",
+			"label":"12,001 - 24,000",
 			"value":24000,
-			"color":"#00C49D",
+			"color":"#3A653C",
 			"className":"two"
 		},
 		{
-			"label":"12,000",
+			"label":"0 - 12,000",
 			"value":12000,
-			"color":"#00EB89",
+			"color":"#5B865D",
 			"className":"one"
 		}
 	],
