@@ -31,7 +31,7 @@ var Config = {
 	"HALF_CIRCLE_OPACITY" : "1.0",
 
 	/* Timeline Container */
-	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "rgba(224, 237, 228, 0.75)",
+	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "rgba(224, 237, 228, 0.55)",
 
 	"TIMELINE_MESSAGE":"<span style='font-weight: bold'>Click</span> on a map title in the timeline to display the map.",
 
