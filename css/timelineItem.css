@@ -102,11 +102,11 @@ div.timeline-event-dot {
 }
 
 div.timeline-event-box {
-text-align: center;
-border-style: solid;
-border-width: 1px;
-border-radius: 4px;
--moz-border-radius: 4px;
+	text-align: center;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
 }
 
 .timeline-event-hover {
@@ -114,6 +114,6 @@ border-radius: 4px;
 }
 
 .timeline-content-image {
-	width:20px;
-	height:auto;
+	width: 20px;
+	height: auto;
 }

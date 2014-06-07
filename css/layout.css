@@ -59,7 +59,7 @@ body {
 
 /* ------ timeline container ------*/
 #timeline-container {
-	height: 310px;
+	height: 250px;
 	margin-left: 300px;
 	overflow: hidden;
 }
