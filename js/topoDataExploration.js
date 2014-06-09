@@ -305,22 +305,6 @@ require([
 						domStyle.set(spl.child.domNode, "opacity", "1.0");
 						//timelineContainerNodeGeom = domStyle.getComputedStyle(timelineContainerNode);
 						//timelineContainerGeometry = domGeom.getContentBox(node, timelineContainerNodeGeom);
-
-						/*if (timelineContainerGeometry.h < 200) {
-						 var n = registry.byId("timeline-container").domNode;
-						 fx.animateProperty({
-						 node:n,
-						 duration:1000,
-						 properties:{
-						 height:{
-						 end:310
-						 }
-						 },
-						 onEnd:function () {
-						 registry.byId("main-window").layout();
-						 }
-						 }).play();
-						 }*/
 						//moveConnects[spl.widgetId].remove();
 						//delete moveConnects[spl.widgetId];
 					});
@@ -421,7 +405,7 @@ require([
 				var timelineDateRange = timeline.getVisibleChartRange();
 				var objectIDs = "";
 				var downloadIDs = "";
-				query('.dgrid-row', grid.domNode).forEach(function (node) {
+				query(".dgrid-row", grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
 					objectIDs += row.data.objID + "|";
 					downloadIDs += row.data.downloadLink.split("=")[1] + "|";
@@ -442,7 +426,7 @@ require([
 				var host = window.location.host;
 				var pathName = window.location.pathname;
 				var fileName = "";
-				var pathArray = window.location.pathname.split('/');
+				var pathArray = window.location.pathname.split("/");
 				if (pathArray[pathArray.length - 1] !== "index.html") {
 					fileName = "index.html";
 				} else {
@@ -522,6 +506,8 @@ require([
 						}
 						exclude = false;
 					});
+					console.log("FILTERED DATA");
+					console.log(filteredData);
 					return filteredData;
 				} else {
 					return dataToFilter;
@@ -543,7 +529,7 @@ require([
 
 			function extentChangeHandler(evt) {
 				var lod = evt.lod.level;
-				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
+				if (lod > Config.ZOOM_LEVEL_THRESHOLD) {
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "1.0");
 				} else {
@@ -553,12 +539,13 @@ require([
 				console.log("LOD: " + lod);
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
-					console.log(row.data.scale);
+					var lodThreshold = row.data;
+					console.log(lodThreshold);
 				});
 			}
 
 			function runQuery(mapExtent, mp, lod) {
-				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
+				if (lod > Config.ZOOM_LEVEL_THRESHOLD) {
 					domStyle.set("timeline", "opacity", "1.0");
 					query(".timelineDisableMessageContainer").style("display", "none");
 
@@ -613,32 +600,36 @@ require([
 								var mapName = feature.attributes.Map_Name;
 								var scale = feature.attributes.Map_Scale;
 								var dateCurrent = feature.attributes.DateCurren;
-								var imprintYear = feature.attributes.Imprint_Ye;
 								var downloadLink = feature.attributes.Download_G;
 								var citation = feature.attributes.Citation;
 
 								// TODO Hard-coded for now
-								var className = "";
+								var className;
+								var lodThreshold;
 								if (scale <= 12000) {
-									className = "one";	// 0 - 12000		purple
+									className = "one";	// 0 - 12000
+									lodThreshold = TOPO_MAP_SCALES[4].lodThreshold;
 								} else if (scale > 12000 && scale <= 24000) {
-									className = "two";	// 12001 - 24000	blue
+									className = "two";	// 12001 - 24000
+									lodThreshold = TOPO_MAP_SCALES[3].lodThreshold;
 								} else if (scale > 24000 && scale <= 62500) {
-									className = "three";// 24001 - 63360	green
+									className = "three";// 24001 - 63360
+									lodThreshold = TOPO_MAP_SCALES[2].lodThreshold;
 								} else if (scale > 62500 && scale <= 125000) {
-									className = "four";	// 63361 - 125000	yellow
-								} else if (scale >= 125000) {
-									className = "five";	// 125000 - 250000	red
+									className = "four";	// 63361 - 125000
+									lodThreshold = TOPO_MAP_SCALES[1].lodThreshold;
+								} else if (scale > 125000) {
+									className = "five";	// 125001 - 250000
+									lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
 								}
 
 								var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
 										"<div class='tooltipContainer'>" +
-										"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
+										"<div class='tooltipHeader'>" + objID + " (" + dateCurrent + ")</div>" +
 										"<div class='tooltipContent'>" + citation + "</div></div>";
 
 								var timelineItemContent = '<div class="timelineItemTooltip noThumbnail" title="' + tooltipContent + '" data-xmin="' + xmin + '" data-ymin="' + ymin + '" data-xmax="' + xmax + '" data-ymax="' + ymax + '">' +
-										'<span class="thumbnailLabel">' + mapName + '</span>';
-
+										'<span class="thumbnailLabel">' + objID + '</span>';
 
 								timelineData.push({
 									"start":new Date(dateCurrent, 0, 0),
@@ -646,6 +637,7 @@ require([
 									"objID":objID,
 									"downloadLink":downloadLink,
 									"scale":scale,
+									"lodThreshold":lodThreshold,
 									"className":className
 								});
 							}); // END forEach
@@ -666,6 +658,7 @@ require([
 
 			function thumbnailRenderCell(object, data, td, options) {
 				var objID = object.objID;
+				console.log("GRID OBJECTID: " + objID);
 				var mapName = object.name;
 				var imprintYear = object.imprintYear;
 				var downloadLink = object.downloadLink;
@@ -730,13 +723,14 @@ require([
 					links.events.addListener(timeline, "ready", onTimelineReady);
 					links.events.addListener(timeline, "select", onSelect);
 				} else {
-					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
-					timelineOptions.style = "box";
-					timelineOptions.height = "250px";
-					timeline.draw(filteredData, timelineOptions);
-					//timeline.setData(filteredData);
-					//timeline.redraw();
+					console.log("--------------------------------------------------------------------------");
+					console.log("UPDATING");
+					console.log(filteredData);
+					timeline.setData(filteredData);
+					timeline.redraw();
 				}
+				console.log("TIMELINE DATA");
+				console.log(timeline.getData());
 
 				$(".timelineItemTooltip").tooltipster({
 					theme:"tooltipster-shadow",
@@ -785,17 +779,22 @@ require([
 
 			function onSelect() {
 				var sel = timeline.getSelection();
+				console.log("ONSELECT");
+				var _timelineData = timeline.getData();
+				console.debug("SEL: ", sel);
 				if (sel.length) {
 					if (sel[0].row !== undefined) {
+						console.log(timelineData);
 						var row = sel[0].row;
-						var objID = timelineData[row].objID;
+						var objID = _timelineData[row].objID;
 						// check to see if the timeline item is currently selected
 						var objIDs = store.query({
 							objID:objID
 						});
 
 						if (objIDs.length < 1) {
-							var downloadLink = timelineData[row].downloadLink;
+							console.log("ONSELECT OBJECTID: " + objID);
+							var downloadLink = _timelineData[row].downloadLink;
 							var whereClause = "OBJECTID = " + objID;
 							var qt = new QueryTask(IMAGE_SERVICE_URL);
 							var q = new Query();

@@ -41,31 +41,36 @@ var Config = {
 			"label":"250,000",
 			"value":250000,
 			"color":"#004ED7",
-			"className":"five"
+			"className":"five",
+			"lodthreshold":7
 		},
 		{
 			"label":"125,000",
 			"value":125000,
 			"color":"#0075C4",
-			"className":"four"
+			"className":"four",
+			"lodthreshold":9
 		},
 		{
 			"label":"62,500",
 			"value":62500,
 			"color":"#009CB0",
-			"className":"three"
+			"className":"three",
+			"lodthreshold":10
 		},
 		{
 			"label":"24,000",
 			"value":24000,
 			"color":"#00C49D",
-			"className":"two"
+			"className":"two",
+			"lodthreshold":11
 		},
 		{
 			"label":"12,000",
 			"value":12000,
 			"color":"#00EB89",
-			"className":"one"
+			"className":"one",
+			"lodthreshold":13
 		}
 	],
 
@@ -112,8 +117,8 @@ var Config = {
 	"TIMELINE_STEP":5,
 	"TIMELINE_ANIMATE":true,
 
-	"ZOOM_LEVEL_THRESHHOLD":9,
-	"THUMBNAIL_VISIBLE_THRESHHOLD":12,
+	"ZOOM_LEVEL_THRESHOLD":9,
+	"THUMBNAIL_VISIBLE_THRESHOLD":12,
 
 	// TMP
 	"DOWNLOAD_PATH":"http://ims.er.usgs.gov/gda_services/download?item_id=",
