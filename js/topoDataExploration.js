@@ -199,6 +199,9 @@ require([
 				grid.on("dgrid-datachange", gridDataChangeListener);
 				grid.on(mouseUtil.enterCell, dgridEnterCellHandler);
 				grid.on(mouseUtil.leaveCell, dgridLeaveCellHandler);
+				/*grid.on("dgrid-refresh-complete", function (event) {
+					console.log("REFRESH")
+				});*/
 
 				// timeline options
 				timelineOptions = {
@@ -544,7 +547,7 @@ require([
 						// disable row
 						domConstruct.create("div", {
 							id:"" + maskId,
-							innerHTML:"<p>Zoom Closer</p>",
+							innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
 							style:{
 								"color":"black",
 								"font-size":"1.2em",
@@ -553,7 +556,7 @@ require([
 								"width":"260px",
 								"height":"120px",
 								"z-index":"300",
-								"opacity":"0.65",
+								"opacity":"0.88",
 								"border-radius":"4px"
 							}}, node, "first");
 					} else {
@@ -729,7 +732,7 @@ require([
 								// disable row
 								domConstruct.create("div", {
 									id:"" + maskId,
-									innerHTML:"<p>Zoom Closer</p>",
+									innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
 									style:{
 										"color":"black",
 										"font-size":"1.2em",
@@ -738,7 +741,7 @@ require([
 										"width":"260px",
 										"height":"120px",
 										"z-index":"300",
-										"opacity":"0.65",
+										"opacity":"0.88",
 										"border-radius":"4px"
 									}}, node, "first");
 							} else {
@@ -821,7 +824,7 @@ require([
 					if (sel[0].row !== undefined) {
 						var row = sel[0].row;
 						var objID = _timelineData[row].objID;
-						// check to see if the timeline item is currently selected
+						// check to see if the timeline item is in the store
 						var objIDs = store.query({
 							objID:objID
 						});
