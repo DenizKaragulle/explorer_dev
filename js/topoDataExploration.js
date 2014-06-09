@@ -130,9 +130,9 @@ require([
 				setHalfCircleStyle(Config.HALF_CIRCLE_BACKGROUND_COLOR, Config.HALF_CIRCLE_COLOR, Config.HALF_CIRCLE_OPACITY);
 				setTimelineLegendHeaderTitle(Config.TIMELINE_LEGEND_HEADER);
 				setAppMessage(".timeline-message", Config.TIMELINE_MESSAGE);
-				setTimelineDisabledMessageStyle(Config.TIMELINE_DISABLED_BACKGROUND_COLOR, Config.TIMELINE_DISABLED_COLOR, Config.TIMELINE_DISABLED_BACKGROUND_OPACITY);
-				setAppMessage(".timelineDisableMessageContainer", Config.TIMELINE_DISABLED_MESSAGE);
-				domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
+				//setTimelineDisabledMessageStyle(Config.TIMELINE_DISABLED_BACKGROUND_COLOR, Config.TIMELINE_DISABLED_COLOR, Config.TIMELINE_DISABLED_BACKGROUND_OPACITY);
+				//setAppMessage(".timelineDisableMessageContainer", Config.TIMELINE_DISABLED_MESSAGE);
+				//domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
 				setTimelineContainerStyle(Config.TIMELINE_CONTAINER_BACKGROUND_COLOR);
 
 				loading = dom.byId("loadingImg");
@@ -532,13 +532,13 @@ require([
 
 			function extentChangeHandler(evt) {
 				currentLOD = evt.lod.level;
-				if (currentLOD > Config.ZOOM_LEVEL_THRESHOLD) {
+				/*if (currentLOD > Config.ZOOM_LEVEL_THRESHOLD) {
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "1.0");
 				} else {
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
-				}
+				}*/
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
 					var lodThreshold = row.data.lodThreshold;
@@ -570,8 +570,8 @@ require([
 
 			function runQuery(mapExtent, mp, lod) {
 				if (lod > Config.ZOOM_LEVEL_THRESHOLD) {
-					domStyle.set("timeline", "opacity", "1.0");
-					query(".timelineDisableMessageContainer").style("display", "none");
+					//domStyle.set("timeline", "opacity", "1.0");
+					//query(".timelineDisableMessageContainer").style("display", "none");
 
 					var qt = new QueryTask(Config.TOPO_INDEX);
 					var q = new Query();
@@ -671,8 +671,8 @@ require([
 						drawTimeline(timelineData);
 					}); // END Deferred
 				} else {
-					domStyle.set("timeline", "opacity", "0.65");
-					query(".timelineDisableMessageContainer").style("display", "block");
+					//domStyle.set("timeline", "opacity", "0.65");
+					//query(".timelineDisableMessageContainer").style("display", "block");
 				}
 			}
 
@@ -1092,11 +1092,11 @@ require([
 				domStyle.set(dom.byId("timeline-container"), "backgroundColor", backgroundColor);
 			}
 
-			function setTimelineDisabledMessageStyle(backgroundColor, color, opacity) {
+			/*function setTimelineDisabledMessageStyle(backgroundColor, color, opacity) {
 				query(".timelineDisableMessageContainer").style("backgroundColor", backgroundColor);
 				query(".timelineDisableMessageContainer").style("color", color);
 				query(".timelineDisableMessageContainer").style("opacity", opacity);
-			}
+			}*/
 
 
 			function fadeIn(node) {
