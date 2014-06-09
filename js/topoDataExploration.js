@@ -506,8 +506,6 @@ require([
 						}
 						exclude = false;
 					});
-					console.log("FILTERED DATA");
-					console.log(filteredData);
 					return filteredData;
 				} else {
 					return dataToFilter;
@@ -653,7 +651,7 @@ require([
 			}
 
 			function mapLoadedHandler() {
-				//console.log("mapLoadedHandler");
+				//
 			}
 
 			function thumbnailRenderCell(object, data, td, options) {
@@ -773,12 +771,9 @@ require([
 
 			function onSelect() {
 				var sel = timeline.getSelection();
-				//console.log("ONSELECT");
 				var _timelineData = timeline.getData();
-				//console.debug("SEL: ", sel);
 				if (sel.length) {
 					if (sel[0].row !== undefined) {
-						//console.log(timelineData);
 						var row = sel[0].row;
 						var objID = _timelineData[row].objID;
 						// check to see if the timeline item is currently selected
@@ -787,7 +782,6 @@ require([
 						});
 
 						if (objIDs.length < 1) {
-							//console.log("ONSELECT OBJECTID: " + objID);
 							var downloadLink = _timelineData[row].downloadLink;
 							var whereClause = "OBJECTID = " + objID;
 							var qt = new QueryTask(IMAGE_SERVICE_URL);
