@@ -24,7 +24,7 @@ var Config = {
 	"STEP_ONE_MESSAGE":"<span style='font-weight: bold'>Go</span> to a location to the location you want to explore, then <br/><span style='font-weight: bold'>Click</span> on a place to see its historical maps.",
 	"STEP_ONE_HALF_CIRCLE_MSG":"1",
 	"STEP_THREE_MESSAGE":"<span style='font-weight: bold'>Slide</span> transparency on map to compare, or drag/drop to re-order maps.",
-	"STEP_THREE_HALF_CIRCLE_MSG":"3",
+	"STEP_THREE_HALF_CIRCLE_MSG":"2",
 
 	"HALF_CIRCLE_BACKGROUND_COLOR" : "#92b3a0",
 	"HALF_CIRCLE_COLOR" : "white",
