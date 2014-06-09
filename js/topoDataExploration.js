@@ -199,9 +199,6 @@ require([
 				grid.on("dgrid-datachange", gridDataChangeListener);
 				grid.on(mouseUtil.enterCell, dgridEnterCellHandler);
 				grid.on(mouseUtil.leaveCell, dgridLeaveCellHandler);
-				/*grid.on("dgrid-refresh-complete", function (event) {
-				 console.log("REFRESH")
-				 });*/
 
 				// timeline options
 				timelineOptions = {
@@ -225,15 +222,15 @@ require([
 
 				watchSplitters(registry.byId("main-window"));
 
-				showFill = 0.0;
+				showFill = 0.10;
 				var showFillBool = false;
 				on(query(".header-title")[0], "click", function (evt) {
 					if (showFillBool) {
 						showFillBool = false;
-						showFill = 0.0;
+						showFill = 0.10;
 					} else {
 						showFillBool = true;
-						showFill = 0.10;
+						showFill = 0.0;
 					}
 				});
 				crosshairSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_SQUARE, 13, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color([255, 0, 24]), 0.35), new Color([255, 0, 24, 0.35]));
