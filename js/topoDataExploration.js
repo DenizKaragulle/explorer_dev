@@ -548,7 +548,7 @@ require([
 						if (dom.byId("" + maskId) === null) {
 							domConstruct.create("div", {
 								id:"" + maskId,
-								innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
+								innerHTML:"<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
 								style:{
 									"color":"black",
 									"font-size":"1.2em",
@@ -734,7 +734,7 @@ require([
 								if (dom.byId("" + maskId) === null) {
 									domConstruct.create("div", {
 										id:"" + maskId,
-										innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
+										innerHTML:"<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
 										style:{
 											"color":"black",
 											"font-size":"1.2em",

@@ -119,6 +119,7 @@ var Config = {
 
 	"ZOOM_LEVEL_THRESHOLD":9,
 	"THUMBNAIL_VISIBLE_THRESHOLD":12,
+	"THUMBNAIL_VISIBLE_THRESHOLD_MSG": "Zoom Closer to view map",
 
 	// TMP
 	"DOWNLOAD_PATH":"http://ims.er.usgs.gov/gda_services/download?item_id=",
