@@ -200,8 +200,8 @@ require([
 				grid.on(mouseUtil.enterCell, dgridEnterCellHandler);
 				grid.on(mouseUtil.leaveCell, dgridLeaveCellHandler);
 				/*grid.on("dgrid-refresh-complete", function (event) {
-					console.log("REFRESH")
-				});*/
+				 console.log("REFRESH")
+				 });*/
 
 				// timeline options
 				timelineOptions = {
@@ -545,24 +545,25 @@ require([
 					var maskId = domAttr.get(node, "id") + "-mask";
 					if (currentLOD <= lodThreshold) {
 						// disable row
-						domConstruct.create("div", {
-							id:"" + maskId,
-							innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
-							style:{
-								"color":"black",
-								"font-size":"1.2em",
-								"background-color":"rgb(241, 241, 241)",
-								"position":"fixed",
-								"width":"260px",
-								"height":"120px",
-								"z-index":"300",
-								"opacity":"0.88",
-								"border-radius":"4px"
-							}}, node, "first");
+						if (dom.byId("" + maskId) === null) {
+							domConstruct.create("div", {
+								id:"" + maskId,
+								innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
+								style:{
+									"color":"black",
+									"font-size":"1.2em",
+									"background-color":"rgb(241, 241, 241)",
+									"position":"fixed",
+									"width":"260px",
+									"height":"120px",
+									"z-index":"300",
+									"opacity":"0.88",
+									"border-radius":"4px"
+								}}, node, "first");
+						}
 					} else {
 						// enable row
 						domConstruct.destroy("" + maskId);
-						console.log(maskId);
 					}
 				});
 			}
@@ -730,20 +731,22 @@ require([
 							var maskId = domAttr.get(node, "id") + "-mask";
 							if (currentLOD <= lodThreshold) {
 								// disable row
-								domConstruct.create("div", {
-									id:"" + maskId,
-									innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
-									style:{
-										"color":"black",
-										"font-size":"1.2em",
-										"background-color":"rgb(241, 241, 241)",
-										"position":"fixed",
-										"width":"260px",
-										"height":"120px",
-										"z-index":"300",
-										"opacity":"0.88",
-										"border-radius":"4px"
-									}}, node, "first");
+								if (dom.byId("" + maskId) === null) {
+									domConstruct.create("div", {
+										id:"" + maskId,
+										innerHTML:"<p style='text-align: center; margin-top: 20px'>Zoom Closer</p>",
+										style:{
+											"color":"black",
+											"font-size":"1.2em",
+											"background-color":"rgb(241, 241, 241)",
+											"position":"fixed",
+											"width":"260px",
+											"height":"120px",
+											"z-index":"300",
+											"opacity":"0.88",
+											"border-radius":"4px"
+										}}, node, "first");
+								}
 							} else {
 								// enable row
 								domConstruct.destroy("" + maskId);
