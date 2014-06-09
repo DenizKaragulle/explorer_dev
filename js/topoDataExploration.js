@@ -103,7 +103,9 @@ require([
 					crosshairGraphicMp,
 
 					timelineContainerNode,
-					timelineContainerNodeGeom;
+					timelineContainerNodeGeom,
+
+					currentLOD;
 
 			ready(function () {
 				parser.parse();
@@ -516,18 +518,18 @@ require([
 				var mapExtent = map.extent;
 				var mp = evt.mapPoint;
 				crosshairGraphicMp = mp;
-				var lod = map.getLevel();
+				currentLOD = map.getLevel();
 				if (crosshairGraphic) {
 					map.graphics.remove(crosshairGraphic);
 				}
 				crosshairGraphic = new Graphic(crosshairGraphicMp, crosshairSymbol);
 				map.graphics.add(crosshairGraphic);
-				runQuery(mapExtent, mp, lod);
+				runQuery(mapExtent, mp, currentLOD);
 			}
 
 			function extentChangeHandler(evt) {
-				var lod = evt.lod.level;
-				if (lod > Config.ZOOM_LEVEL_THRESHOLD) {
+				currentLOD = evt.lod.level;
+				if (currentLOD > Config.ZOOM_LEVEL_THRESHOLD) {
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "1.0");
 				} else {
@@ -537,11 +539,10 @@ require([
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
 					var lodThreshold = row.data.lodThreshold;
-					console.log(lod + "\t" + lodThreshold);
-					if (lod <= lodThreshold) {
+					if (currentLOD <= lodThreshold) {
 						// disable row
 						domStyle.set(node, "background-color", "rgb(204, 204, 204)");
-						domStyle.set(node, "opacity", "0.1");
+						domStyle.set(node, "opacity", "0.2");
 					} else {
 						// enable row
 						domStyle.set(node, "background-color", "transparent");
@@ -708,6 +709,18 @@ require([
 						if (row) {
 							layers.push(row.data.layer);
 							map.removeLayer(row.data.layer);
+
+							var lodThreshold = row.data.lodThreshold;
+							if (currentLOD <= lodThreshold) {
+								// disable row
+								domStyle.set(node, "background-color", "rgb(204, 204, 204)");
+								domStyle.set(node, "opacity", "0.2");
+							} else {
+								// enable row
+								domStyle.set(node, "background-color", "transparent");
+								domStyle.set(node, "opacity", "1.0");
+							}
+
 						}
 					});
 
