@@ -21,7 +21,7 @@ var Config = {
 	"APP_SUBHEADER_TEXT":"",
 
 	/* Step Messages */
-	"STEP_ONE_MESSAGE":"<span style='font-weight: bold'>Zoom or Search</span> to a location to explore the map collection.",
+	"STEP_ONE_MESSAGE":"<span style='font-weight: bold'>Go</span> to a location to the location you want to explore, then <br/><span style='font-weight: bold'>Click</span> on a place to see its historical maps.",
 	"STEP_ONE_HALF_CIRCLE_MSG":"1",
 	"STEP_TWO_MESSAGE":"<span style='font-weight: bold'>Slide</span> transparency on map to compare, or drag/drop to re-order maps.",
 	"STEP_TWO_HALF_CIRCLE_MSG":"2",
@@ -33,38 +33,38 @@ var Config = {
 	/* Timeline Container */
 	"TIMELINE_CONTAINER_BACKGROUND_COLOR": "rgba(224, 237, 228, 0.55)",
 
-	"TIMELINE_MESSAGE":"<span style='font-weight: bold'>Click</span> on a map title in the timeline to display the map.",
+	"TIMELINE_MESSAGE":"<span style='font-weight: bold'>Click</span> timeline maps to view in main window.",
 
 	"TIMELINE_LEGEND_HEADER":"Historical Map Scales",
 	"TIMELINE_LEGEND_VALUES":[
 		{
 			"label":"250,000",
 			"value":250000,
-			"color":"#5D7370",
+			"color":"#004ED7",
 			"className":"five"
 		},
 		{
 			"label":"125,000",
 			"value":125000,
-			"color":"#7FA6A1",
+			"color":"#0075C4",
 			"className":"four"
 		},
 		{
 			"label":"62,500",
 			"value":62500,
-			"color":"#B8D9B8",
+			"color":"#009CB0",
 			"className":"three"
 		},
 		{
 			"label":"24,000",
 			"value":24000,
-			"color":"#D6EDBD",
+			"color":"#00C49D",
 			"className":"two"
 		},
 		{
 			"label":"12,000",
 			"value":12000,
-			"color":"#cac98f",
+			"color":"#00EB89",
 			"className":"one"
 		}
 	],
