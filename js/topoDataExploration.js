@@ -125,8 +125,8 @@ require([
 				setAppHeaderSubtitle(Config.APP_SUBHEADER_TEXT);
 				setAppMessage(".step-one-message", Config.STEP_ONE_MESSAGE);
 				setAppMessage(".step-one-half-circle-msg", Config.STEP_ONE_HALF_CIRCLE_MSG);
-				setAppMessage(".step-two-message", Config.STEP_TWO_MESSAGE);
-				setAppMessage(".step-two-half-circle-msg", Config.STEP_TWO_HALF_CIRCLE_MSG);
+				setAppMessage(".step-three-message", Config.STEP_THREE_MESSAGE);
+				setAppMessage(".step-three-half-circle-msg", Config.STEP_THREE_HALF_CIRCLE_MSG);
 				setHalfCircleStyle(Config.HALF_CIRCLE_BACKGROUND_COLOR, Config.HALF_CIRCLE_COLOR, Config.HALF_CIRCLE_OPACITY);
 				setTimelineLegendHeaderTitle(Config.TIMELINE_LEGEND_HEADER);
 				setAppMessage(".timeline-message", Config.TIMELINE_MESSAGE);
@@ -539,14 +539,27 @@ require([
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
 					var lodThreshold = row.data.lodThreshold;
+					var maskId = domAttr.get(node, "id") + "-mask";
 					if (currentLOD <= lodThreshold) {
 						// disable row
-						domStyle.set(node, "background-color", "rgb(204, 204, 204)");
-						domStyle.set(node, "opacity", "0.2");
+						domConstruct.create("div", {
+							id:"" + maskId,
+							innerHTML:"<p>Zoom Closer</p>",
+							style:{
+								"color":"black",
+								"font-size":"1.2em",
+								"background-color":"rgb(241, 241, 241)",
+								"position":"fixed",
+								"width":"260px",
+								"height":"120px",
+								"z-index":"300",
+								"opacity":"0.65",
+								"border-radius":"4px"
+							}}, node, "first");
 					} else {
 						// enable row
-						domStyle.set(node, "background-color", "transparent");
-						domStyle.set(node, "opacity", "1.0");
+						domConstruct.destroy("" + maskId);
+						console.log(maskId);
 					}
 				});
 			}
@@ -711,16 +724,27 @@ require([
 							map.removeLayer(row.data.layer);
 
 							var lodThreshold = row.data.lodThreshold;
+							var maskId = domAttr.get(node, "id") + "-mask";
 							if (currentLOD <= lodThreshold) {
 								// disable row
-								domStyle.set(node, "background-color", "rgb(204, 204, 204)");
-								domStyle.set(node, "opacity", "0.2");
+								domConstruct.create("div", {
+									id:"" + maskId,
+									innerHTML:"<p>Zoom Closer</p>",
+									style:{
+										"color":"black",
+										"font-size":"1.2em",
+										"background-color":"rgb(241, 241, 241)",
+										"position":"fixed",
+										"width":"260px",
+										"height":"120px",
+										"z-index":"300",
+										"opacity":"0.65",
+										"border-radius":"4px"
+									}}, node, "first");
 							} else {
 								// enable row
-								domStyle.set(node, "background-color", "transparent");
-								domStyle.set(node, "opacity", "1.0");
+								domConstruct.destroy("" + maskId);
 							}
-
 						}
 					});
 
