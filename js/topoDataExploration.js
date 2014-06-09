@@ -625,11 +625,11 @@ require([
 
 								var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
 										"<div class='tooltipContainer'>" +
-										"<div class='tooltipHeader'>" + objID + " (" + dateCurrent + ")</div>" +
+										"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
 										"<div class='tooltipContent'>" + citation + "</div></div>";
 
 								var timelineItemContent = '<div class="timelineItemTooltip noThumbnail" title="' + tooltipContent + '" data-xmin="' + xmin + '" data-ymin="' + ymin + '" data-xmax="' + xmax + '" data-ymax="' + ymax + '">' +
-										'<span class="thumbnailLabel">' + objID + '</span>';
+										'<span class="thumbnailLabel">' + mapName + '</span>';
 
 								timelineData.push({
 									"start":new Date(dateCurrent, 0, 0),
@@ -658,7 +658,6 @@ require([
 
 			function thumbnailRenderCell(object, data, td, options) {
 				var objID = object.objID;
-				console.log("GRID OBJECTID: " + objID);
 				var mapName = object.name;
 				var imprintYear = object.imprintYear;
 				var downloadLink = object.downloadLink;
@@ -723,14 +722,9 @@ require([
 					links.events.addListener(timeline, "ready", onTimelineReady);
 					links.events.addListener(timeline, "select", onSelect);
 				} else {
-					console.log("--------------------------------------------------------------------------");
-					console.log("UPDATING");
-					console.log(filteredData);
 					timeline.setData(filteredData);
 					timeline.redraw();
 				}
-				console.log("TIMELINE DATA");
-				console.log(timeline.getData());
 
 				$(".timelineItemTooltip").tooltipster({
 					theme:"tooltipster-shadow",
@@ -779,12 +773,12 @@ require([
 
 			function onSelect() {
 				var sel = timeline.getSelection();
-				console.log("ONSELECT");
+				//console.log("ONSELECT");
 				var _timelineData = timeline.getData();
-				console.debug("SEL: ", sel);
+				//console.debug("SEL: ", sel);
 				if (sel.length) {
 					if (sel[0].row !== undefined) {
-						console.log(timelineData);
+						//console.log(timelineData);
 						var row = sel[0].row;
 						var objID = _timelineData[row].objID;
 						// check to see if the timeline item is currently selected
@@ -793,7 +787,7 @@ require([
 						});
 
 						if (objIDs.length < 1) {
-							console.log("ONSELECT OBJECTID: " + objID);
+							//console.log("ONSELECT OBJECTID: " + objID);
 							var downloadLink = _timelineData[row].downloadLink;
 							var whereClause = "OBJECTID = " + objID;
 							var qt = new QueryTask(IMAGE_SERVICE_URL);
