@@ -534,11 +534,19 @@ require([
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
 				}
-				console.log("LOD: " + lod);
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
-					var lodThreshold = row.data;
-					console.log(lodThreshold);
+					var lodThreshold = row.data.lodThreshold;
+					console.log(lod + "\t" + lodThreshold);
+					if (lod <= lodThreshold) {
+						// disable row
+						domStyle.set(node, "background-color", "rgb(204, 204, 204)");
+						domStyle.set(node, "opacity", "0.1");
+					} else {
+						// enable row
+						domStyle.set(node, "background-color", "transparent");
+						domStyle.set(node, "opacity", "1.0");
+					}
 				});
 			}
 
@@ -783,6 +791,7 @@ require([
 
 						if (objIDs.length < 1) {
 							var downloadLink = _timelineData[row].downloadLink;
+							var _lodThreshhold = _timelineData[row].lodThreshold;
 							var whereClause = "OBJECTID = " + objID;
 							var qt = new QueryTask(IMAGE_SERVICE_URL);
 							var q = new Query();
@@ -833,6 +842,7 @@ require([
 									imprintYear:dateCurrent,
 									scale:scale,
 									scaleLabel:scaleLabel,
+									lodThreshold:_lodThreshhold,
 									downloadLink:downloadLink,
 									extent:extent
 								}, {
