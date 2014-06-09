@@ -529,7 +529,7 @@ require([
 			}
 
 			function mapClickHandler(evt) {
-				var currentMapExtent = map.extent;
+				var mapExtent = map.extent;
 				var mp = evt.mapPoint;
 				crosshairGraphicMp = mp;
 				var lod = map.getLevel();
@@ -538,11 +538,10 @@ require([
 				}
 				crosshairGraphic = new Graphic(crosshairGraphicMp, crosshairSymbol);
 				map.graphics.add(crosshairGraphic);
-				runQuery(currentMapExtent, mp, lod);
+				runQuery(mapExtent, mp, lod);
 			}
 
 			function extentChangeHandler(evt) {
-				var currentMapExtent = evt.extent;
 				var lod = evt.lod.level;
 				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
@@ -551,9 +550,14 @@ require([
 					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
 					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
 				}
+				console.log("LOD: " + lod);
+				query('.dgrid-row', grid.domNode).forEach(function (node) {
+					var row = grid.row(node);
+					console.log(row.data.scale);
+				});
 			}
 
-			function runQuery(currentMapExtent, mp, lod) {
+			function runQuery(mapExtent, mp, lod) {
 				if (lod > Config.ZOOM_LEVEL_THRESHHOLD) {
 					domStyle.set("timeline", "opacity", "1.0");
 					query(".timelineDisableMessageContainer").style("display", "none");
@@ -567,7 +571,7 @@ require([
 					if (Config.QUERY_GEOMETRY === "MAP_POINT") {
 						q.geometry = mp;
 					} else {
-						q.geometry = currentMapExtent.expand(Config.EXTENT_EXPAND);
+						q.geometry = mapExtent.expand(Config.EXTENT_EXPAND);
 					}
 
 					showLoadingIndicator();
@@ -728,7 +732,7 @@ require([
 				} else {
 					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
 					timelineOptions.style = "box";
-					timelineOptions.height = height + "px";
+					timelineOptions.height = "250px";
 					timeline.draw(filteredData, timelineOptions);
 					//timeline.setData(filteredData);
 					//timeline.redraw();
@@ -806,7 +810,7 @@ require([
 								if (dateCurrent === null)
 									dateCurrent = Config.MSG_UNKNOWN;
 								var scale = rs.features[0].attributes.Map_Scale;
-								scale = number.format(scale, {
+								var scaleLabel = number.format(scale, {
 									places:0
 								});
 
@@ -841,6 +845,7 @@ require([
 									name:mapName,
 									imprintYear:dateCurrent,
 									scale:scale,
+									scaleLabel:scaleLabel,
 									downloadLink:downloadLink,
 									extent:extent
 								}, {

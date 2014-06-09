@@ -44,12 +44,13 @@
 	width: 10%;
 }*/
 
+
 /* Slider control */
 #grid .field-transparency {
 	width: 50%;
 	position: absolute;
 	left: 90px;
-	margin-top: 37%;
+	margin-top: 30%;
 }
 
 #grid .dgrid-cell {
@@ -80,7 +81,6 @@
 	overflow-y: auto !important;
 	margin-top: 0 !important;
 }
-
 
 /* -------- thumbnail --------- */
 .thumbnailMapName {
@@ -142,8 +142,12 @@
 
 /* */
 .dgrid-row {
-	margin-top: 10px !important;
+	/*margin-top: 10px !important;*/
 	margin-bottom: 20px !important;
+	/*background-color: red;*/
+	height: 120px;
+	width: 260px;
+	border-radius: 4px;
 }
 
 /* Slider */
