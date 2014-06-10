@@ -574,19 +574,9 @@ require([
 						if (dom.byId("" + maskId) === null) {
 							domConstruct.create("div", {
 								id: "" + maskId,
-								"class": "chris",
-								innerHTML: "<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
-								style: {
-									"color": "black",
-									"font-size": "1.2em",
-									"background-color": "rgb(241, 241, 241)",
-									"position": "fixed",
-									"width": "260px",
-									"height": "120px",
-									"z-index": "300",
-									"opacity": "0.88",
-									"border-radius": "4px"
-								}}, node, "first");
+								"class": "grid-map",
+								innerHTML: "<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>"
+							}, node, "first");
 						}
 					} else {
 						// enable row
@@ -745,7 +735,7 @@ require([
 
 				topic.subscribe("/dnd/drop", function (source, nodes, copy, target) {
 					var layers = [];
-					query(".chris").forEach(domConstruct.destroy);
+					query(".grid-map").forEach(domConstruct.destroy);
 					query(".dgrid-row").forEach(function (node) {
 						var row = target.grid.row(node);
 						if (row) {
@@ -759,19 +749,9 @@ require([
 								if (dom.byId("" + maskId) === null) {
 									domConstruct.create("div", {
 										"id": "" + maskId,
-										"class": "chris",
-										"innerHTML": "<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
-										"style": {
-											"color": "black",
-											"font-size": "1.2em",
-											"background-color": "rgb(241, 241, 241)",
-											"position": "fixed",
-											"width": "260px",
-											"height": "120px",
-											"z-index": "300",
-											"opacity": "0.88",
-											"border-radius": "4px"
-										}}, node, "first");
+										"class": "grid-map",
+										"innerHTML": "<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>"
+									}, node, "first");
 								}
 							} else {
 								// enable row
