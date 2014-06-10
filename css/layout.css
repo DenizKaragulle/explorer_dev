@@ -194,3 +194,17 @@ body {
 .outside-lod {
 	opacity: 0.3;
 }
+
+/* */
+.step-two-message {
+	position: absolute;
+	bottom: 150px;
+	margin-left: 40px;
+	display: none;
+}
+
+.stepTwo {
+	position: absolute;
+	bottom: 150px;
+	display: none;
+}

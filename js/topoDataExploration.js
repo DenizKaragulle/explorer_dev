@@ -125,11 +125,14 @@ require([
 				setAppHeaderSubtitle(Config.APP_SUBHEADER_TEXT);
 				setAppMessage(".step-one-message", Config.STEP_ONE_MESSAGE);
 				setAppMessage(".step-one-half-circle-msg", Config.STEP_ONE_HALF_CIRCLE_MSG);
+				setAppMessage(".step-two-message", Config.STEP_TWO_MESSAGE);
+				setAppMessage(".step-two-half-circle-msg", Config.STEP_TWO_HALF_CIRCLE_MSG);
 				setAppMessage(".step-three-message", Config.STEP_THREE_MESSAGE);
 				setAppMessage(".step-three-half-circle-msg", Config.STEP_THREE_HALF_CIRCLE_MSG);
+
 				setHalfCircleStyle(Config.HALF_CIRCLE_BACKGROUND_COLOR, Config.HALF_CIRCLE_COLOR, Config.HALF_CIRCLE_OPACITY);
 				setTimelineLegendHeaderTitle(Config.TIMELINE_LEGEND_HEADER);
-				setAppMessage(".timeline-message", Config.TIMELINE_MESSAGE);
+				//setAppMessage(".timeline-message", Config.TIMELINE_MESSAGE);
 				//setTimelineDisabledMessageStyle(Config.TIMELINE_DISABLED_BACKGROUND_COLOR, Config.TIMELINE_DISABLED_COLOR, Config.TIMELINE_DISABLED_BACKGROUND_OPACITY);
 				//setAppMessage(".timelineDisableMessageContainer", Config.TIMELINE_DISABLED_MESSAGE);
 				//domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
@@ -529,13 +532,6 @@ require([
 
 			function extentChangeHandler(evt) {
 				currentLOD = evt.lod.level;
-				/*if (currentLOD > Config.ZOOM_LEVEL_THRESHOLD) {
-					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "none");
-					domStyle.set(query(".timeline-legend-container")[0], "opacity", "1.0");
-				} else {
-					domStyle.set(query(".timelineDisableMessageContainer")[0], "display", "block");
-					domStyle.set(query(".timeline-legend-container")[0], "opacity", "0.3");
-				}*/
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
 					var lodThreshold = row.data.lodThreshold;
@@ -545,6 +541,7 @@ require([
 						if (dom.byId("" + maskId) === null) {
 							domConstruct.create("div", {
 								id:"" + maskId,
+								"class": "chris",
 								innerHTML:"<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
 								style:{
 									"color":"black",
@@ -567,9 +564,6 @@ require([
 
 			function runQuery(mapExtent, mp, lod) {
 				if (lod > Config.ZOOM_LEVEL_THRESHOLD) {
-					//domStyle.set("timeline", "opacity", "1.0");
-					//query(".timelineDisableMessageContainer").style("display", "none");
-
 					var qt = new QueryTask(Config.TOPO_INDEX);
 					var q = new Query();
 					q.returnGeometry = true;
@@ -662,6 +656,8 @@ require([
 									"className":className
 								});
 							}); // END forEach
+							//hideStep(".stepOne", ".step-one-message");
+							//showStep(".stepTwo", ".step-two-message");
 						} else {
 
 						} // END QUERY
@@ -702,11 +698,12 @@ require([
 						map.removeLayer(storeObj[0].layer);
 						store.remove(objID);
 						if (store.data.length < 1) {
-							hideGrid();
 							map.graphics.remove(mouseOverGraphic);
 							map.graphics.clear();
 							addCrosshair();
 							hideLoadingIndicator();
+							hideStep(".stepThree", ".step-three-message");
+							showStep(".stepTwo", ".step-two-message");
 						}
 					}
 				});
@@ -718,6 +715,7 @@ require([
 
 				topic.subscribe("/dnd/drop", function (source, nodes, copy, target) {
 					var layers = [];
+					query(".chris").forEach(domConstruct.destroy);
 					query(".dgrid-row").forEach(function (node) {
 						var row = target.grid.row(node);
 						if (row) {
@@ -730,9 +728,10 @@ require([
 								// disable row
 								if (dom.byId("" + maskId) === null) {
 									domConstruct.create("div", {
-										id:"" + maskId,
-										innerHTML:"<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
-										style:{
+										"id":"" + maskId,
+										"class": "chris",
+										"innerHTML":"<p style='text-align: center; margin-top: 20px'>" + Config.THUMBNAIL_VISIBLE_THRESHOLD_MSG + "</p>",
+										"style":{
 											"color":"black",
 											"font-size":"1.2em",
 											"background-color":"rgb(241, 241, 241)",
@@ -767,6 +766,8 @@ require([
 					timeline.draw(filteredData, timelineOptions);
 					links.events.addListener(timeline, "ready", onTimelineReady);
 					links.events.addListener(timeline, "select", onSelect);
+					hideStep(".stepOne", "");
+					showStep(".stepTwo", ".step-two-message");
 				} else {
 					timeline.setData(filteredData);
 					timeline.redraw();
@@ -781,12 +782,7 @@ require([
 
 				$(".timeline-event").mouseenter(function (evt) {
 					// TODO IE / What a mess!
-					var xmin,
-							ymin,
-							xmax,
-							ymax,
-							extent,
-							sfs;
+					var xmin, ymin, xmax, ymax, extent, sfs;
 					if (evt.target.children[0].children[0].getAttribute("data-xmin")) {
 						xmin = evt.target.children[0].children[0].getAttribute("data-xmin");
 						xmax = evt.target.children[0].children[0].getAttribute("data-xmax");
@@ -810,10 +806,10 @@ require([
 						map.graphics.add(mouseOverGraphic);
 					}
 				}).mouseleave(function () {
-							map.graphics.remove(mouseOverGraphic);
-							map.graphics.clear();
-							addCrosshair();
-						});
+					map.graphics.remove(mouseOverGraphic);
+					map.graphics.clear();
+					addCrosshair();
+				});
 				hideLoadingIndicator();
 			}
 
@@ -889,6 +885,8 @@ require([
 									before:firstRowObj[0]
 								});
 							}); // END execute
+							hideStep(".stepTwo", ".step-two-message");
+							showStep(".stepThree", ".step-three-message");
 							showGrid();
 						} else {
 							// already in the store/added to the map
@@ -1017,17 +1015,44 @@ require([
 				map.graphics.add(crosshairGraphic);
 			}
 
+			/*function hideStep(graphic, msg) {
+				fadeOut(graphic);
+				if (msg !== "")
+					fadeOut(msg);
+			}*/
+
+			/*function showStep(graphic, msg) {
+				$(graphic).css("display", "block");
+				$(msg).css("display", "block");
+				fadeIn(graphic);
+				fadeIn(msg);
+			}*/
+
+			function hideStep(className1, className2) {
+				$(className1).css("display", "none");
+				$(className2).css("display", "none");
+				//$(".stepTwo").css("display", "block");
+			//	$(".step-two-message").css("display", "block");
+				//$(".stepThree").css("display", "none");
+				//$(".step-three-message").css("display", "none");
+				//$(".gridContainer").css("display", "none");
+			}
+
+			function showStep(className1, className2) {
+				$(className1).css("display", "block");
+				$(className2).css("display", "block");
+				//$(".stepTwo").css("display", "block");
+			//	$(".step-two-message").css("display", "block");
+				//$(".stepThree").css("display", "none");
+				//$(".step-three-message").css("display", "none");
+				//$(".gridContainer").css("display", "none");
+			}
+
 			function hideGrid() {
-				fadeIn(".stepOne");
-				fadeIn(".timeline-message");
-				$(".stepTwo").css("display", "none");
 				$(".gridContainer").css("display", "none");
 			}
 
 			function showGrid() {
-				fadeOut(".stepOne");
-				fadeOut(".timeline-message");
-				$(".stepTwo").css("display", "block");
 				$(".gridContainer").css("display", "block");
 			}
 

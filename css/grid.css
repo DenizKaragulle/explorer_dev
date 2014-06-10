@@ -44,7 +44,6 @@
 	width: 10%;
 }*/
 
-
 /* Slider control */
 #grid .field-transparency {
 	width: 50%;
@@ -169,4 +168,15 @@ table > tr > td.dgrid-cell.dgrid-cell-padding.dgrid-column-3.field-transparency.
 
 .dgrid-row-table {
 	margin-top: 10px !important;
+}
+
+.grid-map {
+	background-color: rgb(218, 218, 218);
+	border-radius: 4px;
+	height: 110px;
+	width: 260px;
+	position: absolute;
+	z-index: 300;
+	opacity: 0.8;
+	display: none;
 }
