@@ -90,7 +90,7 @@ var Config = {
 	"MAP_SERVER_CA":"http://usgs.esri.com:6080/arcgis/rest/services/USGS_HTMC_Footprints_CA/MapServer",
 
 	"INFO_THUMBNAIL_TOKEN":"?token=" + "04QDlTJ8GZUUva8naL0wGvh3VvkjKJj4zWvasskfpvSOmPVrEkYTYIxq9NfWVTQXcRHPRRsa__RWLSkrXutQ2l2Qsq5wp35iEnk8yvqEXT5kjmnpU4C-CC4HHnSDAUzaXTK8KG_NYRSSKTn-Hpca5NhfgvtOnj_-WblSTT7UAakJtVBs-z75mOOBEm_2TrMH",
-	"IMAGE_SERVER":"http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps/ImageServer/",
+	"IMAGE_SERVER":"http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps/ImageServer",
 	"MAP_SERVER":"http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps_Index/MapServer", // + "?self?culture=en&f=json&token=" + "IkxAypOD2nEVLGKrHr-SNYiFhlUs96IGpIaH2E1xXAB-JwIqiy--IotPbsr7nWVUoR3SzCiCtxCZTTZZfKvuEGEiX6idPZ_h4oc5-A71gJs9Z5yL_AVlUpmRtCn6BtmAYTb7cLTxerg0UEuhYwDtYk54RAE1AULhOjSY8ysOP-8MMRZIocFauQxB3eVUTHJS"
 
 	/* Basemap initialization properties */

@@ -111,7 +111,7 @@ require([
 				document.title = Config.APP_TITLE;
 				OUTFIELDS = Config.OUTFIELDS;
 				TOKEN = Config.TOKEN;
-				IMAGE_SERVICE_URL = "http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps/ImageServer?self?culture=en&f=json&token=" + TOKEN;
+				IMAGE_SERVICE_URL = Config.IMAGE_SERVER + "?culture=en&f=json&token=" + TOKEN;
 				TOPO_MAP_SCALES = Config.TIMELINE_LEGEND_VALUES;
 				DOWNLOAD_PATH = Config.DOWNLOAD_PATH;
 
@@ -654,7 +654,7 @@ require([
 							var className = setClassname(scale);
 							var lodThreshold = setLodThreshold(scale);
 
-							var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
+							var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
 									"<div class='tooltipContainer'>" +
 									"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
 									"<div class='tooltipContent'>" + citation + "</div></div>";
@@ -698,7 +698,7 @@ require([
 				var mapName = object.name;
 				var imprintYear = object.imprintYear;
 				var downloadLink = object.downloadLink;
-				var imgSrc = Config.IMAGE_SERVER + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN;
+				var imgSrc = Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN;
 
 				var node = domConstruct.create("div", {
 					"class":"renderedCell",
