@@ -198,13 +198,13 @@ body {
 /* */
 .step-two-message {
 	position: absolute;
-	bottom: 150px;
+	bottom: 235px;
 	margin-left: 40px;
 	display: none;
 }
 
 .stepTwo {
 	position: absolute;
-	bottom: 150px;
+	bottom: 230px;
 	display: none;
 }

@@ -143,5 +143,11 @@ var Config = {
 	"SHARING_RELATED":"",
 	"SHARING_HASHTAG":"USGS",
 
-	"MAP_CLICK_HANDLER_ON":true
+	"MAP_CLICK_HANDLER_ON":true,
+
+	"CROSSHAIR_SIZE": 15,
+	"CROSSHAIR_FILL_COLOR":[255, 0, 24],
+	"CROSSHAIR_OPACITY":0.95,
+
+	"NO_MAPS_MESSAGE": "No maps overlap the selected point"
 };
