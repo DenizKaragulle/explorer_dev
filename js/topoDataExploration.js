@@ -775,6 +775,7 @@ require([
 					timeline.draw(filteredData, timelineOptions);
 					links.events.addListener(timeline, "ready", onTimelineReady);
 					links.events.addListener(timeline, "select", onSelect);
+					//links.events.addListener(timeline, "rangechanged", timelineRangeChanged);
 					hideStep(".stepOne", "");
 					showStep(".stepTwo", ".step-two-message");
 				} else {
@@ -914,6 +915,10 @@ require([
 				if ($(".gridContainer").css("display") === "block") {
 					hideStep(".stepTwo", ".step-two-message");
 				}
+			}
+
+			function timelineRangeChanged(evt) {
+				console.log(timeline.getVisibleChartRange());
 			}
 
 			function createOrderedStore(data, options) {
@@ -1062,7 +1067,6 @@ require([
 				}
 				crosshairGraphic = new Graphic(mp, crosshairSymbol);
 				map.graphics.add(crosshairGraphic);
-				console.log("GRAPHICS ADDED")
 			}
 
 			function hideStep(className1, className2) {
