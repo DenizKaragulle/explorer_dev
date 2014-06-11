@@ -778,12 +778,11 @@ require([
 					hideStep(".stepOne", "");
 					showStep(".stepTwo", ".step-two-message");
 				} else {
-					//var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
-					//console.log(height);
+					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
 					//timelineOptions.height = height + "px";
 					//timeline.draw(filteredData, timelineOptions);
-					timeline.setData(filteredData); 	works
-					timeline.redraw();				works
+					timeline.setData(filteredData);
+					timeline.redraw();
 				}
 
 				$(".timelineItemTooltip").tooltipster({
