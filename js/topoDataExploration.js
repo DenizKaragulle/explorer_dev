@@ -33,8 +33,6 @@ require([
 	"dgrid/util/mouse",
 	"dijit/form/Button",
 	"dijit/form/HorizontalSlider",
-	"dijit/form/HorizontalRule",
-	"dijit/form/HorizontalRuleLabels",
 	"dijit/layout/BorderContainer",
 	"dijit/layout/ContentPane",
 	"dijit/registry",
@@ -57,7 +55,7 @@ require([
 	"esri/tasks/QueryTask",
 	"esri/urlUtils",
 	"dojo/domReady!"],
-		function (array, declare, fx, lang, win, Deferred, aspect, dom, domAttr, domClass, domConstruct, domGeom, domStyle, ioQuery, json, mouse, number, on, parser, all, query, ready, topic, Observable, Memory, win, DnD, Grid, editor, Selection, Keyboard, mouseUtil, Button, HorizontalSlider, HorizontalRule, HorizontalRuleLabels, BorderContainer, ContentPane, registry, arcgisUtils, Geocoder, Extent, Point, SpatialReference, Graphic, ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ImageServiceParameters, MosaicRule, Map, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Color, Query, QueryTask, urlUtils) {
+		function (array, declare, fx, lang, win, Deferred, aspect, dom, domAttr, domClass, domConstruct, domGeom, domStyle, ioQuery, json, mouse, number, on, parser, all, query, ready, topic, Observable, Memory, win, DnD, Grid, editor, Selection, Keyboard, mouseUtil, Button, HorizontalSlider, BorderContainer, ContentPane, registry, arcgisUtils, Geocoder, Extent, Point, SpatialReference, Graphic, ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ImageServiceParameters, MosaicRule, Map, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Color, Query, QueryTask, urlUtils) {
 
 			var map,
 					OUTFIELDS,
@@ -152,13 +150,6 @@ require([
 				on(document, ".share_twitter:click", shareTwitter);
 				on(document, ".share_bitly:click", requestBitly);
 				on(document, "click", documentClickHandler);
-
-				on(geocoder, "find-results", function (results) {
-					// TODO Is this listener even required?
-				});
-				on(geocoder, "select", function (results) {
-					// TODO Is this listener even required?
-				});
 
 				var columns = [
 					{
@@ -297,16 +288,10 @@ require([
 			}
 
 			function watchSplitters(bc) {
-				//var moveConnects = {};
 				array.forEach(["bottom"], function (region) {
 					var spl = bc.getSplitter(region);
 					aspect.after(spl, "_startDrag", function () {
 						domStyle.set(spl.child.domNode, "opacity", "0.4");
-						/*moveConnects[spl.widgetId] = on(spl.domNode, "mousemove", function (evt) {
-						 console.log(evt.y);
-						 var vs = win.getBox();
-						 console.log(vs.h - evt.y);
-						 });*/
 					});
 					aspect.after(spl, "_stopDrag", function () {
 						domStyle.set(spl.child.domNode, "opacity", "1.0");
@@ -314,8 +299,6 @@ require([
 						var node = dom.byId("timeline-container");
 						timelineContainerNodeGeom = domStyle.getComputedStyle(timelineContainerNode);
 						timelineContainerGeometry = domGeom.getContentBox(node, timelineContainerNodeGeom);
-						//moveConnects[spl.widgetId].remove();
-						//delete moveConnects[spl.widgetId];
 						drawTimeline(timelineData);
 					});
 				});
@@ -439,7 +422,10 @@ require([
 						showGrid();
 						runQuery(currentMapExtent, _mp, urlQueryObject.zl);
 					} else {
-						// there are no OID's, check if the timeline was visible
+						// TODO there are no OID's, check if the timeline was visible
+						if (_mp) {
+							runQuery(currentMapExtent, _mp, urlQueryObject.zl);
+						}
 					}
 				}
 			}
@@ -701,8 +687,10 @@ require([
 			}
 
 			function mapLoadedHandler() {
-				// TODO Initialize here
-				console.log("mapLoadedHandler");
+				if (urlQueryObject !== null) {
+					var _mp = new Point([urlQueryObject.clickLat, urlQueryObject.clickLng], new SpatialReference({ wkid:102100 }));
+					addCrosshair(_mp);
+				}
 			}
 
 			function thumbnailRenderCell(object, data, td, options) {
@@ -731,7 +719,7 @@ require([
 							// no remaining items in the grid/store
 							map.graphics.remove(mouseOverGraphic);
 							map.graphics.clear();
-							addCrosshair();
+							addCrosshair(currentMapClickPoint);
 							hideLoadingIndicator();
 							hideStep(".stepThree", ".step-three-message");
 							showStep(".stepTwo", ".step-two-message");
@@ -743,7 +731,7 @@ require([
 
 			function drawTimeline(data) {
 				var filteredData = filterData(data, filter);
-				//console.debug("drawTimeline", filteredData);
+				console.debug("drawTimeline", filteredData);
 				topic.subscribe("/dnd/drop", function (source, nodes, copy, target) {
 					var layers = [];
 					query(".grid-map").forEach(domConstruct.destroy);
@@ -790,12 +778,12 @@ require([
 					hideStep(".stepOne", "");
 					showStep(".stepTwo", ".step-two-message");
 				} else {
-					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
-					console.log(height);
-					timelineOptions.height = height + "px";
-					timeline.draw(filteredData, timelineOptions);
-					//timeline.setData(filteredData); 	works
-					//timeline.redraw();				works
+					//var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
+					//console.log(height);
+					//timelineOptions.height = height + "px";
+					//timeline.draw(filteredData, timelineOptions);
+					timeline.setData(filteredData); 	works
+					timeline.redraw();				works
 				}
 
 				$(".timelineItemTooltip").tooltipster({
@@ -833,7 +821,7 @@ require([
 				}).mouseleave(function () {
 							map.graphics.remove(mouseOverGraphic);
 							map.graphics.clear();
-							addCrosshair();
+							addCrosshair(currentMapClickPoint);
 						});
 				hideLoadingIndicator();
 			}
@@ -1069,12 +1057,13 @@ require([
 				return sfs;
 			}
 
-			function addCrosshair() {
+			function addCrosshair(mp) {
 				if (crosshairGraphic) {
 					map.graphics.remove(crosshairGraphic);
 				}
-				crosshairGraphic = new Graphic(currentMapClickPoint, crosshairSymbol);
+				crosshairGraphic = new Graphic(mp, crosshairSymbol);
 				map.graphics.add(crosshairGraphic);
+				console.log("GRAPHICS ADDED")
 			}
 
 			function hideStep(className1, className2) {
@@ -1139,7 +1128,7 @@ require([
 			function dgridLeaveCellHandler(evt) {
 				map.graphics.remove(mouseOverGraphic);
 				map.graphics.clear();
-				addCrosshair();
+				addCrosshair(currentMapClickPoint);
 			}
 
 			function setAppHeaderStyle(txtColor, backgroundColor) {
