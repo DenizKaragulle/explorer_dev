@@ -210,7 +210,7 @@ div.timeline-navigation-move-right {
 	background: url('img/16/moveright.png') no-repeat center;
 }
 
-/* Timeline mask for no results returned */
+/* Timeline mask (no results returned) */
 .timeline-mask {
 	background-color: rgb(233, 233, 233);
 	right: 5px;

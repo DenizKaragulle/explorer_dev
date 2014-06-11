@@ -106,28 +106,6 @@
 	right: 35px;
 	max-width: 180px;
 	left:auto;
-	/*position: absolute;
-	top: 0;
-	z-index: 1010;
-	display: none;
-	max-width: 190px;
-	padding: 1px;
-	text-align: left;
-	background-color: #ffffff;
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding;
-	background-clip: padding-box;
-	border: 1px solid #ccc;
-	border: 1px solid rgba(0, 0, 0, 0.2);
-	-webkit-border-radius: 6px;
-	-moz-border-radius: 6px;
-	border-radius: 6px;
-	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	-moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-	white-space: normal;
-	margin-left: -10px;
-	color: black;*/
 }
 
 .arrow {

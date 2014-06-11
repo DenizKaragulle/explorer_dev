@@ -311,10 +311,12 @@ require([
 					aspect.after(spl, "_stopDrag", function () {
 						domStyle.set(spl.child.domNode, "opacity", "1.0");
 						// TODO Timeline height needs to be resized accordingly
-						//timelineContainerNodeGeom = domStyle.getComputedStyle(timelineContainerNode);
-						//timelineContainerGeometry = domGeom.getContentBox(node, timelineContainerNodeGeom);
+						var node = dom.byId("timeline-container");
+						timelineContainerNodeGeom = domStyle.getComputedStyle(timelineContainerNode);
+						timelineContainerGeometry = domGeom.getContentBox(node, timelineContainerNodeGeom);
 						//moveConnects[spl.widgetId].remove();
 						//delete moveConnects[spl.widgetId];
+						drawTimeline(timelineData);
 					});
 				});
 			}
@@ -788,8 +790,12 @@ require([
 					hideStep(".stepOne", "");
 					showStep(".stepTwo", ".step-two-message");
 				} else {
-					timeline.setData(filteredData);
-					timeline.redraw();
+					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
+					console.log(height);
+					timelineOptions.height = height + "px";
+					timeline.draw(filteredData, timelineOptions);
+					//timeline.setData(filteredData); 	works
+					//timeline.redraw();				works
 				}
 
 				$(".timelineItemTooltip").tooltipster({

@@ -20,8 +20,6 @@
 	border: none;
 	margin-left: 25px;
 	margin-right: 5px;
-	/*width: 230px;*/
-	/*font-size: 0.90em;*/
 }
 
 /* Object ID */
@@ -29,20 +27,10 @@
 	display: none;
 }
 
-/*
-#grid .field-layer {
-	display: none;
-}*/
-
 /* Cell text (map name, scale, etc...) */
 #grid .field-name {
 	width: 90%;
-	/*font-size: 0.9em;*/
 }
-
-/*#grid .field-rmLayer {
-	width: 10%;
-}*/
 
 /* Slider control */
 #grid .field-transparency {
@@ -59,13 +47,10 @@
 #grid .dgrid-row:hover {
 	background-color: transparent;
 	cursor: default;
-	/*cursor: pointer;*/
 }
 
 #grid .dgrid-selected {
 	background-color: transparent;
-	/*border: 1px solid #adff2f;*/
-	/*cursor: pointer;*/
 }
 
 .dgrid-no-data,
@@ -81,7 +66,7 @@
 	margin-top: 0 !important;
 }
 
-/* -------- thumbnail --------- */
+/* -------- Thumbnail --------- */
 .thumbnailMapName {
 	font-size: 0.8em;
 	font-weight: 600;
@@ -98,6 +83,7 @@
 	color: #707070;
 }
 
+/* -------- Download link -------- */
 .downloadLink a:link {
 	font-size: 0.8em;
 	color: #666666;
@@ -113,6 +99,7 @@
 	color: #1d2966;
 }
 
+/* -------- Remove Layer button -------- */
 .rm-layer-btn {
 	width: 24px;
 	height: 24px;
@@ -139,28 +126,20 @@
 	padding: 4px;
 }
 
-/* */
+/* -------- dGrid row -------- */
 .dgrid-row {
-	/*margin-top: 10px !important;*/
 	margin-bottom: 20px !important;
-	/*background-color: red;*/
 	height: 120px;
 	width: 260px;
 	border-radius: 4px;
 }
 
-/* Slider */
+/* -------- Slider -------- */
 table > tr > td.dgrid-cell.dgrid-cell-padding.dgrid-column-3.field-transparency.dgrid-cell-editing {
 	position: absolute;
 	margin-top: 70px;
 	margin-left: -100px;
 }
-
-/* Remove Layer Button */
-/*table > tr > td.dgrid-cell.dgrid-cell-padding.dgrid-column-1.field-rmLayer > span > span {
-	border-radius: 10px !important;
-	padding: 2px !important;
-}*/
 
 .dgrid-cell-padding {
 	/*padding: 0 !important;*/
@@ -184,4 +163,8 @@ table > tr > td.dgrid-cell.dgrid-cell-padding.dgrid-column-3.field-transparency.
 
 html.has-mozilla .dgrid :focus, html.has-opera .dgrid :focus {
 	outline: none !important;
+}
+
+.dijitSliderH {
+	opacity: 0.85;
 }
