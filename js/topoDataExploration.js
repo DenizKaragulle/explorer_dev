@@ -94,8 +94,6 @@ require([
 
 					legendNode,
 
-					showFill,
-
 					crosshairSymbol,
 					crosshairGraphic,
 
@@ -219,17 +217,6 @@ require([
 
 				watchSplitters(registry.byId("main-window"));
 
-				showFill = 0.10;
-				var showFillBool = false;
-				on(query(".header-title")[0], "click", function (evt) {
-					if (showFillBool) {
-						showFillBool = false;
-						showFill = 0.10;
-					} else {
-						showFillBool = true;
-						showFill = 0.0;
-					}
-				});
 				timelineContainerNode = dom.byId("timeline-container");
 				initUrlParamData(urlQueryObject);
 			});
@@ -803,8 +790,8 @@ require([
 						ymax = evt.target.children[0].children[0].getAttribute("data-ymax");
 						extent = new Extent(xmin, ymin, xmax, ymax, new SpatialReference({ wkid:102100 }));
 						sfs = createMouseOverGraphic(
-								new Color([Config.IMAGE_BORDER_COLOR_R, Config.IMAGE_BORDER_COLOR_G, Config.IMAGE_BORDER_COLOR_B, Config.IMAGE_BORDER_OPACITY]),
-								new Color([Config.IMAGE_FILL_COLOR_R, Config.IMAGE_FILL_COLOR_G, Config.IMAGE_FILL_COLOR_B, showFill]));
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_BORDER),
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_FILL));
 						mouseOverGraphic = new Graphic(extent, sfs);
 						map.graphics.add(mouseOverGraphic);
 					}
@@ -813,8 +800,8 @@ require([
 					if (data) {
 						extent = new Extent(data.xmin, data.ymin, data.xmax, data.ymax, new SpatialReference({ wkid:102100 }));
 						sfs = createMouseOverGraphic(
-								new Color([Config.IMAGE_BORDER_COLOR_R, Config.IMAGE_BORDER_COLOR_G, Config.IMAGE_BORDER_COLOR_B, Config.IMAGE_BORDER_OPACITY]),
-								new Color([Config.IMAGE_FILL_COLOR_R, Config.IMAGE_FILL_COLOR_G, Config.IMAGE_FILL_COLOR_B, showFill]));
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_BORDER),
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_FILL));
 						mouseOverGraphic = new Graphic(extent, sfs);
 						map.graphics.add(mouseOverGraphic);
 					}
@@ -1040,15 +1027,37 @@ require([
 			}
 
 			function setLodThreshold(scale) {
-				var lodThreshold;
+				/*var lodThreshold;
+				var nScales = TOPO_MAP_SCALES.length - 1;
+				var maxScaleValue = TOPO_MAP_SCALES[0].value;
+				var minScaleValue = TOPO_MAP_SCALES[nScales].value;
+				while (nScales > 0) {
+					if (scale <= minScaleValue) {
+						lodThreshold = TOPO_MAP_SCALES[TOPO_MAP_SCALES.length - 1].lodThreshold;
+					}
+
+					if (scale > TOPO_MAP_SCALES[nScales].value && scale <= TOPO_MAP_SCALES[nScales - 1].value) {
+						lodThreshold = TOPO_MAP_SCALES[nScales - 1].lodThreshold;
+					}
+
+					if (scale > maxScaleValue) {
+						lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
+					}
+					nScales--;
+				}*/
+
 				if (scale <= TOPO_MAP_SCALES[4].value) {
 					lodThreshold = TOPO_MAP_SCALES[4].lodThreshold;
+
 				} else if (scale > TOPO_MAP_SCALES[4].value && scale <= TOPO_MAP_SCALES[3].value) {
 					lodThreshold = TOPO_MAP_SCALES[3].lodThreshold;
+
 				} else if (scale > TOPO_MAP_SCALES[3].value && scale <= TOPO_MAP_SCALES[2].value) {
 					lodThreshold = TOPO_MAP_SCALES[2].lodThreshold;
+
 				} else if (scale > TOPO_MAP_SCALES[2].value && scale <= TOPO_MAP_SCALES[1].value) {
 					lodThreshold = TOPO_MAP_SCALES[1].lodThreshold;
+
 				} else if (scale > TOPO_MAP_SCALES[1].value) {
 					lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
 				}
@@ -1122,8 +1131,8 @@ require([
 				var row = grid.row(evt);
 				var extent = row.data.extent;
 				var sfs = createMouseOverGraphic(
-						new Color([Config.IMAGE_BORDER_COLOR_R, Config.IMAGE_BORDER_COLOR_G, Config.IMAGE_BORDER_COLOR_B, Config.IMAGE_BORDER_OPACITY]),
-						new Color([Config.IMAGE_FILL_COLOR_R, Config.IMAGE_FILL_COLOR_G, Config.IMAGE_FILL_COLOR_B, Config.IMAGE_FILL_OPACITY]));
+						new Color(Config.SIDEBAR_MAP_MOUSEOVER_GR_BORDER),
+						new Color(Config.SIDEBAR_MAP_MOUSEOVER_GR_FILL));
 				mouseOverGraphic = new Graphic(extent, sfs);
 				map.graphics.add(mouseOverGraphic);
 			}
@@ -1205,7 +1214,7 @@ require([
 					"http://api.bitly.com/v3/shorten?callback=?",
 					"https://api-ssl.bitly.com/v3/shorten?callback=?"
 				];
-				var bitlyUrl = location.protocol == 'http:' ? bitlyUrls[0] : bitlyUrls[1];
+				var bitlyUrl = location.protocol === 'http:' ? bitlyUrls[0] : bitlyUrls[1];
 
 				var urlParams = esri.urlToObject(url).query || {};
 				var targetUrl = url;
@@ -1241,7 +1250,7 @@ require([
 					"http://api.bitly.com/v3/shorten?callback=?",
 					"https://api-ssl.bitly.com/v3/shorten?callback=?"
 				];
-				var bitlyUrl = location.protocol == 'http:' ? bitlyUrls[0] : bitlyUrls[1];
+				var bitlyUrl = location.protocol === 'http:' ? bitlyUrls[0] : bitlyUrls[1];
 
 				var urlParams = esri.urlToObject(url).query || {};
 				var targetUrl = url;

@@ -94,6 +94,7 @@ body {
 	color: #666;
 	width: 200px;
 	padding-left: 5px;
+	padding-top: 10px;
 }
 
 .timeline-legend-header {
@@ -194,13 +195,13 @@ body {
 /* */
 .step-two-message {
 	position: absolute;
-	bottom: 235px;
+	bottom: 245px;
 	margin-left: 40px;
 	display: none;
 }
 
 .stepTwo {
 	position: absolute;
-	bottom: 230px;
+	bottom: 235px;
 	display: none;
 }
