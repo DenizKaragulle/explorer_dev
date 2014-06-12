@@ -493,7 +493,7 @@ require([
 			}
 
 			function filterData(dataToFilter, filter) {
-				var filteredData = [];
+				var _filteredData = [];
 				var exclude = false;
 				var nFilters = filter.length;
 
@@ -551,11 +551,11 @@ require([
 						}
 
 						if (!exclude) {
-							filteredData.push(item);
+							_filteredData.push(item);
 						}
 						exclude = false;
 					});
-					return filteredData;
+					return _filteredData;
 				} else {
 					return dataToFilter;
 				}
@@ -779,10 +779,10 @@ require([
 					showStep(".stepTwo", ".step-two-message");
 				} else {
 					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
-					timelineOptions.height = height + "px";
-					timeline.draw(filteredData, timelineOptions);
-					//timeline.setData(filteredData);
-					//timeline.redraw();
+					//timelineOptions.height = height + "px";
+					//timeline.draw(filteredData, timelineOptions);
+					timeline.setData(filteredData);
+					timeline.redraw();
 				}
 
 				$(".timelineItemTooltip").tooltipster({
@@ -917,7 +917,9 @@ require([
 			}
 
 			function timelineRangeChanged(evt) {
-				console.log(timeline.getVisibleChartRange());
+				//console.log(timeline.getVisibleChartRange());
+				timelineOptions.step = 20;
+				timeline.draw(filteredData, timelineOptions);
 			}
 
 			function createOrderedStore(data, options) {
