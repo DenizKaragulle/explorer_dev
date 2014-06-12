@@ -58,6 +58,7 @@ require([
 		function (array, declare, fx, lang, win, Deferred, aspect, dom, domAttr, domClass, domConstruct, domGeom, domStyle, ioQuery, json, mouse, number, on, parser, all, query, ready, topic, Observable, Memory, win, DnD, Grid, editor, Selection, Keyboard, mouseUtil, Button, HorizontalSlider, BorderContainer, ContentPane, registry, arcgisUtils, Geocoder, Extent, Point, SpatialReference, Graphic, ArcGISDynamicMapServiceLayer, ArcGISImageServiceLayer, ImageServiceParameters, MosaicRule, Map, SimpleFillSymbol, SimpleLineSymbol, SimpleMarkerSymbol, Color, Query, QueryTask, urlUtils) {
 
 			var map,
+					options,
 					OUTFIELDS,
 					TOKEN,
 					IMAGE_SERVICE_URL,
@@ -82,14 +83,17 @@ require([
 
 			// sharing URL
 					sharingUrl,
+
 			//urlObject,
 					urlQueryObject,
+
 			// loading icon
 					loading,
 
 			// timeline container dimensions
 					timelineContainerGeometry,
 
+					filteredData,
 					filterSelection = [],
 
 					legendNode,
@@ -528,7 +532,6 @@ require([
 
 							if (_lowerBoundScale === "") {
 								if (_mapScale <= _filterScale) {
-									console.log("MINIMUM SCALE: " + _mapScale);
 									exclude = true;
 									break;
 								}
@@ -536,7 +539,6 @@ require([
 
 							if (_upperBoundScale === "") {
 								if (_mapScale >= _filterScale) {
-									console.log("MAXIMUM SCALE: " + _mapScale);
 									exclude = true;
 									break;
 								}
@@ -729,7 +731,7 @@ require([
 			}
 
 			function drawTimeline(data) {
-				var filteredData = filterData(data, filter);
+				filteredData = filterData(data, filter);
 				//console.debug("drawTimeline", filteredData);
 				topic.subscribe("/dnd/drop", function (source, nodes, copy, target) {
 					var layers = [];
@@ -916,10 +918,50 @@ require([
 				}
 			}
 
-			function timelineRangeChanged(evt) {
-				//console.log(timeline.getVisibleChartRange());
-				timelineOptions.step = 20;
+			function timelineRangeChanged(e) {
+				timelineOptions.step = 5;
 				timeline.draw(filteredData, timelineOptions);
+				$(".timelineItemTooltip").tooltipster({
+					theme:"tooltipster-shadow",
+					contentAsHTML:true,
+					position:"right",
+					offsetY:20
+				});
+
+				$(".timeline-event").mouseenter(function (evt) {
+					// TODO IE / What a mess!
+					var xmin, ymin, xmax, ymax, extent, sfs;
+					if (evt.target.children[0].children[0].getAttribute("data-xmin")) {
+						xmin = evt.target.children[0].children[0].getAttribute("data-xmin");
+						xmax = evt.target.children[0].children[0].getAttribute("data-xmax");
+						ymin = evt.target.children[0].children[0].getAttribute("data-ymin");
+						ymax = evt.target.children[0].children[0].getAttribute("data-ymax");
+						extent = new Extent(xmin, ymin, xmax, ymax, new SpatialReference({ wkid:102100 }));
+						sfs = createMouseOverGraphic(
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_BORDER),
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_FILL));
+						mouseOverGraphic = new Graphic(extent, sfs);
+						map.graphics.add(mouseOverGraphic);
+					}
+					// TODO
+					var data = evt.currentTarget.childNodes[0].childNodes[0].dataset;
+					if (data) {
+						extent = new Extent(data.xmin, data.ymin, data.xmax, data.ymax, new SpatialReference({ wkid:102100 }));
+						sfs = createMouseOverGraphic(
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_BORDER),
+								new Color(Config.TIMELINE_ITEM_MOUSEOVER_GR_FILL));
+						mouseOverGraphic = new Graphic(extent, sfs);
+						map.graphics.add(mouseOverGraphic);
+					}
+				}).mouseleave(function () {
+							map.graphics.remove(mouseOverGraphic);
+							map.graphics.clear();
+							addCrosshair(currentMapClickPoint);
+						});
+
+				//query(".timeline-axis-text").style("font-size", "1.0em");
+				//timeline.setData(filteredData);
+				//timeline.redraw();
 			}
 
 			function createOrderedStore(data, options) {
@@ -1211,6 +1253,22 @@ require([
 				fx.fadeIn(fadeArgs).play();
 			}
 
+
+			function get_short_url(long_url, func) {
+				$.getJSON(
+						"http://api.bitly.com/v3/shorten?callback=?",
+						{
+							"format":"json",
+							"apiKey":"R_14fc9f92e48f7c78c21db32bd01f7014",
+							"login":"esristorymaps",
+							"longUrl":long_url
+						},
+						function (response) {
+							func(response.data.url);
+						}
+				);
+			}
+
 			function fadeOut(node) {
 				var _node = query(node)[0];
 				var fadeArgs = {
@@ -1257,18 +1315,15 @@ require([
 						function (response) {
 							if (!response || !response || !response.data.url)
 								return;
-							$("#bitlyLoad").fadeOut();
-							$("#bitlyInput").fadeIn();
-							$("#bitlyInput").val(response.data.url);
-							$("#bitlyInput").select();
 						}
-				).complete(function (data) {
-							var options = 'text=' + encodeURIComponent($('#title').text()) +
-									'&url=' + encodeURIComponent(data.responseJSON.data.url) +
+				).complete(function (response) {
+							options = 'text=' + encodeURIComponent($('#title').text()) +
+									'&url=' + encodeURIComponent(response.responseJSON.data.url) +
 									'&related=' + Config.SHARING_RELATED +
 									'&hashtags=' + Config.SHARING_HASHTAG;
 							window.open('https://twitter.com/intent/tweet?' + options, 'Tweet', 'toolbar=0,status=0,width=626,height=436');
 						});
+						window.open('https://twitter.com/intent/tweet?' + options, 'Tweet', 'toolbar=0,status=0,width=626,height=436');
 			}
 
 			function requestBitly() {
