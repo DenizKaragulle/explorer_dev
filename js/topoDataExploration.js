@@ -78,7 +78,7 @@ require([
 					timelineData = [],
 					filter = [],
 					TOPO_MAP_SCALES,
-					mapScales = [],
+					mapScaleValues = [],
 
 			// sharing URL
 					sharingUrl,
@@ -102,42 +102,38 @@ require([
 
 					currentLOD,
 					currentMapExtent,
-					currentMapClickPoint;
+					currentMapClickPoint,
+
+					nScales = 0,
+					maxScaleValue = 0,
+					minScaleValue = 0;
 
 			ready(function () {
 				parser.parse();
 				document.title = Config.APP_TITLE;
 				OUTFIELDS = Config.OUTFIELDS;
+				// TODO Remove at some point and use OAuth
 				TOKEN = Config.TOKEN;
-				IMAGE_SERVICE_URL = Config.IMAGE_SERVER + "?culture=en&f=json&token=" + TOKEN;
+				IMAGE_SERVICE_URL = Config.IMAGE_SERVER + Config.IMAGE_SERVER_JSON + TOKEN;
 				TOPO_MAP_SCALES = Config.TIMELINE_LEGEND_VALUES;
 				DOWNLOAD_PATH = Config.DOWNLOAD_PATH;
 
 				for (var i = 0; i < TOPO_MAP_SCALES.length; i++) {
-					mapScales.push(TOPO_MAP_SCALES[i].value);
+					mapScaleValues.push(TOPO_MAP_SCALES[i].value);
 				}
 
 				crosshairSymbol = new SimpleMarkerSymbol(SimpleMarkerSymbol.STYLE_CROSS, Config.CROSSHAIR_SIZE, new SimpleLineSymbol(SimpleLineSymbol.STYLE_SOLID, new Color(Config.CROSSHAIR_FILL_COLOR), Config.CROSSHAIR_OPACITY));
 
-				setAppHeaderStyle(Config.APP_HEADER_TEXT_COLOR, Config.APP_HEADER_BACKGROUND_COLOR);
-				setAppHeaderTitle(Config.APP_HEADER_TEXT);
-				setAppHeaderSubtitle(Config.APP_SUBHEADER_TEXT);
-				setAppMessage(".step-one-message", Config.STEP_ONE_MESSAGE);
-				setAppMessage(".step-one-half-circle-msg", Config.STEP_ONE_HALF_CIRCLE_MSG);
-				setAppMessage(".step-two-message", Config.STEP_TWO_MESSAGE);
-				setAppMessage(".step-two-half-circle-msg", Config.STEP_TWO_HALF_CIRCLE_MSG);
-				setAppMessage(".step-three-message", Config.STEP_THREE_MESSAGE);
-				setAppMessage(".step-three-half-circle-msg", Config.STEP_THREE_HALF_CIRCLE_MSG);
+				nScales = getNumberOfScales(TOPO_MAP_SCALES);
+				maxScaleValue = getMaxScaleValue(TOPO_MAP_SCALES);
+				minScaleValue = getMinScaleValue(TOPO_MAP_SCALES);
 
-				setHalfCircleStyle(Config.HALF_CIRCLE_BACKGROUND_COLOR, Config.HALF_CIRCLE_COLOR, Config.HALF_CIRCLE_OPACITY);
-				setTimelineLegendHeaderTitle(Config.TIMELINE_LEGEND_HEADER);
-				setTimelineContainerStyle(Config.TIMELINE_CONTAINER_BACKGROUND_COLOR);
+				loadAppStyles();
 
 				loading = dom.byId("loadingImg");
 				urlQueryObject = getUrlParameters();
 				initBaseMap(urlQueryObject);
 				initGeocoderDijit("geocoder");
-				//initUrlParamData(urlQueryObject);
 
 				on(map, "load", mapLoadedHandler);
 				on(map, "click", mapClickHandler);
@@ -189,8 +185,8 @@ require([
 
 				grid.on("dgrid-datachange", gridDataChangeHandler);
 				grid.on("dgrid-refresh-complete", gridRefreshHandler);
-				grid.on(mouseUtil.enterCell, dgridEnterCellHandler);
-				grid.on(mouseUtil.leaveCell, dgridLeaveCellHandler);
+				grid.on(mouseUtil.enterCell, gridEnterCellHandler);
+				grid.on(mouseUtil.leaveCell, gridLeaveCellHandler);
 				/*aspect.after(grid, "renderRow", function(row, args) {
 				 console.log(row)
 				 });*/
@@ -211,7 +207,7 @@ require([
 					"cluster":Config.TIMELINE_CLUSTER,
 					"animate":Config.TIMELINE_ANIMATE
 				};
-
+				// TODO Change from topo-legend to timeline-legend
 				legendNode = query(".topo-legend")[0];
 				array.forEach(Config.TIMELINE_LEGEND_VALUES, buildLegend);
 
@@ -220,6 +216,21 @@ require([
 				timelineContainerNode = dom.byId("timeline-container");
 				initUrlParamData(urlQueryObject);
 			});
+
+			function loadAppStyles() {
+				setAppHeaderStyle(Config.APP_HEADER_TEXT_COLOR, Config.APP_HEADER_BACKGROUND_COLOR);
+				setAppHeaderTitle(Config.APP_HEADER_TEXT);
+				setAppHeaderSubtitle(Config.APP_SUBHEADER_TEXT);
+				setAppMessage(".step-one-message", Config.STEP_ONE_MESSAGE);
+				setAppMessage(".step-one-half-circle-msg", Config.STEP_ONE_HALF_CIRCLE_MSG);
+				setAppMessage(".step-two-message", Config.STEP_TWO_MESSAGE);
+				setAppMessage(".step-two-half-circle-msg", Config.STEP_TWO_HALF_CIRCLE_MSG);
+				setAppMessage(".step-three-message", Config.STEP_THREE_MESSAGE);
+				setAppMessage(".step-three-half-circle-msg", Config.STEP_THREE_HALF_CIRCLE_MSG);
+				setHalfCircleStyle(Config.HALF_CIRCLE_BACKGROUND_COLOR, Config.HALF_CIRCLE_COLOR, Config.HALF_CIRCLE_OPACITY);
+				setTimelineLegendHeaderTitle(Config.TIMELINE_LEGEND_HEADER);
+				setTimelineContainerStyle(Config.TIMELINE_CONTAINER_BACKGROUND_COLOR);
+			}
 
 			function documentClickHandler(e) {
 				if (!$("#bitlyIcon").is(e.target) && !$("#bitlyInput").is(e.target) && !$(".popover-content").is(e.target)) {
@@ -492,7 +503,7 @@ require([
 						for (var i = 0; i < nFilters; i++) {
 							var _filterScale = number.parse(filter[i]);
 							var _mapScale = item.scale;
-							var _pos = array.indexOf(mapScales, _filterScale);
+							var _pos = array.indexOf(mapScaleValues, _filterScale);
 							var _lowerBoundScale;
 							var _upperBoundScale;
 							var current;
@@ -589,10 +600,10 @@ require([
 				var queryTask = new QueryTask(Config.TOPO_INDEX);
 				var q = new Query();
 				q.returnGeometry = true;
-				q.outFields = OUTFIELDS;
+				q.outFields = Config.TOPO_INDEX_OUTFIELDS;
 				q.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
 				// TODO confirm with CF/SB where clause is correct
-				q.where = "IsDefault = 1";
+				q.where = Config.TOPO_INDEX_WHERE;
 				if (Config.QUERY_GEOMETRY === "MAP_POINT") {
 					q.geometry = mp;
 				} else {
@@ -676,6 +687,7 @@ require([
 			function mapLoadedHandler() {
 				if (urlQueryObject !== null) {
 					var _mp = new Point([urlQueryObject.clickLat, urlQueryObject.clickLng], new SpatialReference({ wkid:102100 }));
+					// add crosshair
 					addCrosshair(_mp);
 				}
 			}
@@ -718,7 +730,7 @@ require([
 
 			function drawTimeline(data) {
 				var filteredData = filterData(data, filter);
-				console.debug("drawTimeline", filteredData);
+				//console.debug("drawTimeline", filteredData);
 				topic.subscribe("/dnd/drop", function (source, nodes, copy, target) {
 					var layers = [];
 					query(".grid-map").forEach(domConstruct.destroy);
@@ -767,10 +779,10 @@ require([
 					showStep(".stepTwo", ".step-two-message");
 				} else {
 					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
-					//timelineOptions.height = height + "px";
-					//timeline.draw(filteredData, timelineOptions);
-					timeline.setData(filteredData);
-					timeline.redraw();
+					timelineOptions.height = height + "px";
+					timeline.draw(filteredData, timelineOptions);
+					//timeline.setData(filteredData);
+					//timeline.redraw();
 				}
 
 				$(".timelineItemTooltip").tooltipster({
@@ -828,7 +840,7 @@ require([
 						if (objIDs.length < 1) {
 							var downloadLink = _timelineData[row].downloadLink;
 							var lodThreshhold = _timelineData[row].lodThreshold;
-							var whereClause = "OBJECTID = " + objID;
+							var whereClause = Config.IMAGE_SERVER_WHERE + objID;
 							var queryTask = new QueryTask(IMAGE_SERVICE_URL);
 							var q = new Query();
 							q.returnGeometry = false;
@@ -1027,41 +1039,54 @@ require([
 			}
 
 			function setLodThreshold(scale) {
-				/*var lodThreshold;
-				var nScales = TOPO_MAP_SCALES.length - 1;
-				var maxScaleValue = TOPO_MAP_SCALES[0].value;
-				var minScaleValue = TOPO_MAP_SCALES[nScales].value;
-				while (nScales > 0) {
+				var _lodThreshold;
+				var i = nScales;
+				while (i > 0) {
 					if (scale <= minScaleValue) {
-						lodThreshold = TOPO_MAP_SCALES[TOPO_MAP_SCALES.length - 1].lodThreshold;
+						_lodThreshold = TOPO_MAP_SCALES[TOPO_MAP_SCALES.length - 1].lodThreshold;
+						break;
 					}
 
-					if (scale > TOPO_MAP_SCALES[nScales].value && scale <= TOPO_MAP_SCALES[nScales - 1].value) {
-						lodThreshold = TOPO_MAP_SCALES[nScales - 1].lodThreshold;
+					if (scale > TOPO_MAP_SCALES[i].value && scale <= TOPO_MAP_SCALES[i - 1].value) {
+						_lodThreshold = TOPO_MAP_SCALES[i - 1].lodThreshold;
+						break;
 					}
 
 					if (scale > maxScaleValue) {
-						lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
+						_lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
+						break;
 					}
-					nScales--;
-				}*/
-
-				if (scale <= TOPO_MAP_SCALES[4].value) {
-					lodThreshold = TOPO_MAP_SCALES[4].lodThreshold;
-
-				} else if (scale > TOPO_MAP_SCALES[4].value && scale <= TOPO_MAP_SCALES[3].value) {
-					lodThreshold = TOPO_MAP_SCALES[3].lodThreshold;
-
-				} else if (scale > TOPO_MAP_SCALES[3].value && scale <= TOPO_MAP_SCALES[2].value) {
-					lodThreshold = TOPO_MAP_SCALES[2].lodThreshold;
-
-				} else if (scale > TOPO_MAP_SCALES[2].value && scale <= TOPO_MAP_SCALES[1].value) {
-					lodThreshold = TOPO_MAP_SCALES[1].lodThreshold;
-
-				} else if (scale > TOPO_MAP_SCALES[1].value) {
-					lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
+					i--;
 				}
-				return lodThreshold;
+
+				/*if (scale <= TOPO_MAP_SCALES[4].value) {
+				 _lodThreshold = TOPO_MAP_SCALES[4].lodThreshold;
+
+				 } else if (scale > TOPO_MAP_SCALES[4].value && scale <= TOPO_MAP_SCALES[3].value) {
+				 _lodThreshold = TOPO_MAP_SCALES[3].lodThreshold;
+
+				 } else if (scale > TOPO_MAP_SCALES[3].value && scale <= TOPO_MAP_SCALES[2].value) {
+				 _lodThreshold = TOPO_MAP_SCALES[2].lodThreshold;
+
+				 } else if (scale > TOPO_MAP_SCALES[2].value && scale <= TOPO_MAP_SCALES[1].value) {
+				 _lodThreshold = TOPO_MAP_SCALES[1].lodThreshold;
+
+				 } else if (scale > TOPO_MAP_SCALES[1].value) {
+				 _lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
+				 }*/
+				return _lodThreshold;
+			}
+
+			function getNumberOfScales(scales) {
+				return scales.length - 1;
+			}
+
+			function getMinScaleValue(scales) {
+				return scales[nScales].value;
+			}
+
+			function getMaxScaleValue(scales) {
+				return scales[0].value;
 			}
 
 			function createMouseOverGraphic(borderColor, fillColor) {
@@ -1125,7 +1150,7 @@ require([
 				});
 			}
 
-			function dgridEnterCellHandler(evt) {
+			function gridEnterCellHandler(evt) {
 				if (mouseOverGraphic)
 					map.graphics.remove(mouseOverGraphic);
 				var row = grid.row(evt);
@@ -1137,7 +1162,7 @@ require([
 				map.graphics.add(mouseOverGraphic);
 			}
 
-			function dgridLeaveCellHandler(evt) {
+			function gridLeaveCellHandler(evt) {
 				map.graphics.remove(mouseOverGraphic);
 				map.graphics.clear();
 				addCrosshair(currentMapClickPoint);

@@ -113,20 +113,34 @@ var Config = {
 	/******** REST endpoints and URL params ********/
 	/* temporary token being used for testing */
 	"TOKEN": "04QDlTJ8GZUUva8naL0wGvh3VvkjKJj4zWvasskfpvSOmPVrEkYTYIxq9NfWVTQXcRHPRRsa__RWLSkrXutQ2l2Qsq5wp35iEnk8yvqEXT5kjmnpU4C-CC4HHnSDAUzaXTK8KG_NYRSSKTn-Hpca5NhfgvtOnj_-WblSTT7UAakJtVBs-z75mOOBEm_2TrMH",
+		/* TODO to be removed */
+	"INFO_THUMBNAIL_TOKEN": "?token=" + "04QDlTJ8GZUUva8naL0wGvh3VvkjKJj4zWvasskfpvSOmPVrEkYTYIxq9NfWVTQXcRHPRRsa__RWLSkrXutQ2l2Qsq5wp35iEnk8yvqEXT5kjmnpU4C-CC4HHnSDAUzaXTK8KG_NYRSSKTn-Hpca5NhfgvtOnj_-WblSTT7UAakJtVBs-z75mOOBEm_2TrMH",
+
 	/* path to thumbnails on Image Service */
 	"INFO_THUMBNAIL": "/info/thumbnail",
-	/* TODO to be removed */
-	"INFO_THUMBNAIL_TOKEN": "?token=" + "04QDlTJ8GZUUva8naL0wGvh3VvkjKJj4zWvasskfpvSOmPVrEkYTYIxq9NfWVTQXcRHPRRsa__RWLSkrXutQ2l2Qsq5wp35iEnk8yvqEXT5kjmnpU4C-CC4HHnSDAUzaXTK8KG_NYRSSKTn-Hpca5NhfgvtOnj_-WblSTT7UAakJtVBs-z75mOOBEm_2TrMH",
+	/* TODO Change name/description */
+	"IMAGE_SERVER_JSON": "?culture=en&f=json&token=",
+
 	/* Image service */
 	"IMAGE_SERVER": "http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps/ImageServer",
-	/* Map Service / Used for footprints (will be removed in production */
-	"MAP_SERVER": "http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps_Index/MapServer", // + "?self?culture=en&f=json&token=" + "IkxAypOD2nEVLGKrHr-SNYiFhlUs96IGpIaH2E1xXAB-JwIqiy--IotPbsr7nWVUoR3SzCiCtxCZTTZZfKvuEGEiX6idPZ_h4oc5-A71gJs9Z5yL_AVlUpmRtCn6BtmAYTb7cLTxerg0UEuhYwDtYk54RAE1AULhOjSY8ysOP-8MMRZIocFauQxB3eVUTHJS"
-	/* Service used to retrieve download links */
-	"TOPO_INDEX": "http://services.arcgis.com/YkVYBaX0zm7bsV3k/ArcGIS/rest/services/USGSTopoIndex/FeatureServer/0",
-	/* USGS (temporary) */
-	"DOWNLOAD_PATH": "http://ims.er.usgs.gov/gda_services/download?item_id=",
 	/* outfields */
 	"OUTFIELDS": ['*'],
+	/* WHERE clause */
+	"IMAGE_SERVER_WHERE": "OBJECTID = ",
+
+	/* Service used to retrieve download links */
+	"TOPO_INDEX": "http://services.arcgis.com/YkVYBaX0zm7bsV3k/ArcGIS/rest/services/USGSTopoIndex/FeatureServer/0",
+	/* outfields */
+	"TOPO_INDEX_OUTFIELDS": ["Download_G", "Map_Name", "Map_Scale", "DateCurren", "SvcOID", "IsDefault", "Citation"],
+	/* WHERE clause */
+	"TOPO_INDEX_WHERE":"IsDefault = 1",
+
+	/* USGS (temporary) */
+	"DOWNLOAD_PATH": "http://ims.er.usgs.gov/gda_services/download?item_id=",
+
+	/* TODO Map Service / Used for footprints (will be removed in production */
+	//"MAP_SERVER": "http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps_Index/MapServer", // + "?self?culture=en&f=json&token=" + "IkxAypOD2nEVLGKrHr-SNYiFhlUs96IGpIaH2E1xXAB-JwIqiy--IotPbsr7nWVUoR3SzCiCtxCZTTZZfKvuEGEiX6idPZ_h4oc5-A71gJs9Z5yL_AVlUpmRtCn6BtmAYTb7cLTxerg0UEuhYwDtYk54RAE1AULhOjSY8ysOP-8MMRZIocFauQxB3eVUTHJS"
+
 
 	/******** Basemap initialization properties ********/
 	/* default basemap */
