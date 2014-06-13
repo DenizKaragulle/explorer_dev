@@ -781,10 +781,10 @@ require([
 					showStep(".stepTwo", ".step-two-message");
 				} else {
 					var height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
-					//timelineOptions.height = height + "px";
-					//timeline.draw(filteredData, timelineOptions);
-					timeline.setData(filteredData);
-					timeline.redraw();
+					timelineOptions.height = height + "px";
+					timeline.draw(filteredData, timelineOptions);
+					//timeline.setData(filteredData);
+					//timeline.redraw();
 				}
 
 				$(".timelineItemTooltip").tooltipster({
@@ -919,7 +919,7 @@ require([
 			}
 
 			function timelineRangeChanged(e) {
-				timelineOptions.step = 5;
+				timelineOptions.height = timelineContainerGeometry ? timelineContainerGeometry.h : Config.TIMELINE_HEIGHT;
 				timeline.draw(filteredData, timelineOptions);
 				$(".timelineItemTooltip").tooltipster({
 					theme:"tooltipster-shadow",
@@ -1102,22 +1102,6 @@ require([
 					}
 					i--;
 				}
-
-				/*if (scale <= TOPO_MAP_SCALES[4].value) {
-				 _lodThreshold = TOPO_MAP_SCALES[4].lodThreshold;
-
-				 } else if (scale > TOPO_MAP_SCALES[4].value && scale <= TOPO_MAP_SCALES[3].value) {
-				 _lodThreshold = TOPO_MAP_SCALES[3].lodThreshold;
-
-				 } else if (scale > TOPO_MAP_SCALES[3].value && scale <= TOPO_MAP_SCALES[2].value) {
-				 _lodThreshold = TOPO_MAP_SCALES[2].lodThreshold;
-
-				 } else if (scale > TOPO_MAP_SCALES[2].value && scale <= TOPO_MAP_SCALES[1].value) {
-				 _lodThreshold = TOPO_MAP_SCALES[1].lodThreshold;
-
-				 } else if (scale > TOPO_MAP_SCALES[1].value) {
-				 _lodThreshold = TOPO_MAP_SCALES[0].lodThreshold;
-				 }*/
 				return _lodThreshold;
 			}
 
