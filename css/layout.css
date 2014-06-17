@@ -28,6 +28,14 @@ body {
 	/*background: #000 url(img/blue_black.jpg) 178px 0px no-repeat;*/
 }
 
+.header-logo {
+	height: 50px;
+	float: right;
+	padding-right: 10px;
+	padding-top: 10px;
+	padding-left: 10px;
+}
+
 .header-title {
 	padding-top: 10px;
 	padding-left: 10px;
