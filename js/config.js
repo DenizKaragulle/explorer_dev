@@ -11,7 +11,7 @@ var Config = {
 	/* Header text size */
 	"APP_HEADER_TEXT_SIZE": "1.6em",
 	/* Header text */
-	"APP_HEADER_TEXT": "USGS Archival Topographic Map Explorer",
+	"APP_HEADER_TEXT": "USGS Historical Topographic Map Explorer",
 
 	/* Header text color */
 	"APP_SUBHEADER_TEXT_COLOR": "white",
