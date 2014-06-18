@@ -577,7 +577,6 @@ require([
 			function extentChangeHandler(evt) {
 				currentMapExtent = evt.extent;
 				currentLOD = evt.lod.level;
-				//console.debug("extentChangeHanler", currentMapExtent, currentMapClickPoint, currentLOD);
 				query('.dgrid-row', grid.domNode).forEach(function (node) {
 					var row = grid.row(node);
 					var lodThreshold = row.data.lodThreshold;
@@ -646,9 +645,9 @@ require([
 							var ymin = ext.ymin;
 							var ymax = ext.ymax;
 
-							var objID = feature.attributes.SvcOID;
+							var objID = feature.attributes[Config.ATTRIBUTE_OBJECTID];
 							var mapName = feature.attributes[Config.ATTRIBUTE_MAP_NAME];
-							var scale = feature.attributes.Map_Scale;
+							var scale = feature.attributes[Config.ATTRIBUTE_SCALE];
 							var dateCurrent = feature.attributes[Config.ATTRIBUTE_DATE];
 							if (dateCurrent === null)
 								dateCurrent = Config.MSG_UNKNOWN;
@@ -740,7 +739,7 @@ require([
 			function addNoResultsMask() {
 				domConstruct.create("div", {
 					"class":"timeline-mask",
-					"innerHTML":"<p style='text-align: center; margin-top: 20px'>" + Config.NO_MAPS_MESSAGE + "</p>"
+					"innerHTML":"<p style='text-align: center; margin-top: 20px'>" + Config.MSG_NO_MAPS + "</p>"
 				}, "timeline", "first");
 			}
 
@@ -753,14 +752,13 @@ require([
 			}
 
 			function thumbnailRenderCell(object, data, td, options) {
-				console.log(object);
 				var objID = object.objID;
 				var mapName = object.name;
 				var imprintYear = object.imprintYear;
 				var downloadLink = object.downloadLink;
 				var imgSrc = Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN;
 
-				var node = domConstruct.create("div", {
+				return domConstruct.create("div", {
 					"class":"renderedCell",
 					"innerHTML":"<button class='rm-layer-btn' data-objectid='" + objID + "'> X </button>" +
 							"<img class='rm-layer-icon' src='" + imgSrc + "'>" +
@@ -786,7 +784,6 @@ require([
 						}
 					}
 				});
-				return node;
 			}
 
 			function drawTimeline(data) {

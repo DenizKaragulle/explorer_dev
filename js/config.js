@@ -206,13 +206,13 @@ var Config = {
 
 	/* Attribute Fields */
 	/* OBJECTID -- DO NOT modify this field --- */
-	"ATTRIBUTE_OBJECTID": "OBJECTID",
+	"ATTRIBUTE_OBJECTID": "SvcOID",
 	/* Name of map displayed */
 	"ATTRIBUTE_MAP_NAME": "Map_Name",
 	/* Date field (UTC format) */
 	"ATTRIBUTE_DATE": "DateCurren",
 	/* Scale field */
-	"SCALE_ATTRIBUTE": "Map_Scale",
+	"ATTRIBUTE_SCALE": "Map_Scale",
 	/* Tooltip content */
 	"TOOLTIP_CONTENT": "",
 	/* Download map link */
@@ -220,16 +220,21 @@ var Config = {
 	/* Map citation <String> or <attribute field> */
 	"ATTRIBUTE_CITATION": "Citation",
 
-
-
-
+	/**************************************************************************
+	 *
+	 **************************************************************************/
 	"MSG_UNKNOWN": "Unknown",
+	"MSG_NO_MAPS": "No maps overlap the selected point",
 
 	"ZOOM_LEVEL_THRESHOLD": 9,
 	"THUMBNAIL_VISIBLE_THRESHOLD": 12,
 	"THUMBNAIL_VISIBLE_THRESHOLD_MSG": "Zoom Closer to view map",
 
-	/******** Mouseover/Mouseout graphic styles (FILL and BORDER) ********/
+	/**************************************************************************
+	 *
+	 * Mouseover/Mouseout graphic styles (FILL and BORDER)
+	 *
+	 **************************************************************************/
 	/* Timeline item mouseover graphics */
 	"TIMELINE_ITEM_MOUSEOVER_GR_FILL":[146, 179, 160, 0.10],
 	"TIMELINE_ITEM_MOUSEOVER_GR_BORDER":[48, 75, 60, 1.0],
@@ -240,13 +245,10 @@ var Config = {
 	"IMAGE_BORDER_WIDTH": 1.75,
 
 	"EXTENT_EXPAND": 0.60,
-	"QUERY_GEOMETRY": "MAP_POINT",
 
 	/******** Sharing/Scoail media icons ********/
 	"SHARING_RELATED": "",
 	"SHARING_HASHTAG": "USGS",
 
-	"MAP_CLICK_HANDLER_ON": true,
-
-	"NO_MAPS_MESSAGE": "No maps overlap the selected point"
+	"MAP_CLICK_HANDLER_ON": true
 };
