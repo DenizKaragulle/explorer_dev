@@ -599,13 +599,15 @@ require([
 			}
 
 			function runQuery(mapExtent, mp, lod) {
-				var queryTask = new QueryTask(Config.TOPO_INDEX);
+				var queryTask = new QueryTask(Config.QUERY_TASK_URL);
 				var q = new Query();
 				q.returnGeometry = true;
-				q.outFields = Config.TOPO_INDEX_OUTFIELDS;
+				q.outFields = Config.QUERY_TASK_OUTFIELDS;
 				q.spatialRelationship = Query.SPATIAL_REL_INTERSECTS;
-				// TODO confirm with CF/SB where clause is correct
-				q.where = Config.TOPO_INDEX_WHERE;
+				q.where = Config.QUERY_WHERE;
+				if (Config.QUERY_WHERE !== "") {
+					q.where = Config.QUERY_WHERE;
+				}
 				if (Config.QUERY_GEOMETRY === "MAP_POINT") {
 					q.geometry = mp;
 				} else {
@@ -645,12 +647,20 @@ require([
 							var ymax = ext.ymax;
 
 							var objID = feature.attributes.SvcOID;
-							var mapName = feature.attributes.Map_Name;
+							var mapName = feature.attributes[Config.ATTRIBUTE_MAP_NAME];
 							var scale = feature.attributes.Map_Scale;
-							var dateCurrent = feature.attributes.DateCurren;
-							var downloadLink = feature.attributes.Download_G;
-							var citation = feature.attributes.Citation;
+							var dateCurrent = feature.attributes[Config.ATTRIBUTE_DATE];
+							if (dateCurrent === null)
+								dateCurrent = Config.MSG_UNKNOWN;
+							var day = formatDay(dateCurrent);
+							var month = formatMonth(dateCurrent);
+							var year = formatYear(dateCurrent);
+							var formattedDate = month + "/" + day + "/" + year;
 
+							var startDate = new Date(dateCurrent, month, day);
+
+							var downloadLink = feature.attributes[Config.ATTRIBUTE_DOWNLOAD_LINK];
+							var citation = feature.attributes[Config.ATTRIBUTE_CITATION];
 							var className = setClassname(scale);
 							var lodThreshold = setLodThreshold(scale);
 
@@ -663,7 +673,7 @@ require([
 									'<span class="thumbnailLabel">' + mapName + '</span>';
 
 							timelineData.push({
-								"start":new Date(dateCurrent, 0, 0),
+								"start":startDate,
 								"content":timelineItemContent,
 								"objID":objID,
 								"downloadLink":downloadLink,
@@ -677,6 +687,54 @@ require([
 					} // END QUERY
 					drawTimeline(timelineData);
 				}); // END Deferred
+			}
+
+			function formatDay(date) {
+				if (date instanceof Date)
+					return date.getDate();
+				else
+					return "";
+			}
+
+			function formatMonth(date) {
+				if (date instanceof Date) {
+					var month = date.getMonth();
+					if (month === 0) {
+						return "01";
+					} else if (month === 1) {
+						return "02";
+					} else if (month === 2) {
+						return "03";
+					} else if (month === 3) {
+						return "04";
+					} else if (month === 4) {
+						return "05";
+					} else if (month === 5) {
+						return "06";
+					} else if (month === 6) {
+						return "07";
+					} else if (month === 7) {
+						return "08";
+					} else if (month === 8) {
+						return "09";
+					} else if (month === 9) {
+						return "10";
+					} else if (month === 10) {
+						return "11";
+					} else if (month === 11) {
+						return "12";
+					}
+				} else {
+					return "";
+				}
+			}
+
+			function formatYear(date) {
+				if (date instanceof Date) {
+					return date.getFullYear();
+				} else {
+					return "";
+				}
 			}
 
 			function addNoResultsMask() {
@@ -695,6 +753,7 @@ require([
 			}
 
 			function thumbnailRenderCell(object, data, td, options) {
+				console.log(object);
 				var objID = object.objID;
 				var mapName = object.name;
 				var imprintYear = object.imprintYear;
@@ -1287,9 +1346,8 @@ require([
 						+ '&p[summary]=' + encodeURIComponent($('#subtitle').text())
 						+ '&p[url]=' + encodeURIComponent(url)
 						+ '&p[images][0]=' + encodeURIComponent($("meta[property='og:image']").attr("content"));
-
-				window.open('http://www.facebook.com/sharer.php?s=100' + options, 'Facebook sharing', 'toolbar=0,status=0,width=626,height=436'
-				);
+				//window.open('https://twitter.com/intent/tweet?' + options, 'Tweet', 'toolbar=0,status=0,width=626,height=436');
+				window.open('http://www.facebook.com/sharer.php?s=100' + options, 'Facebook sharing', 'toolbar=0,status=0,width=626,height=436');
 			}
 
 			function shareTwitter() {
