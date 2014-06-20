@@ -97,6 +97,15 @@
 	display: none;
 }
 
+.bitlyInputContainer {
+	width:150px;
+	height:30px;
+}
+
+#bitlyInput {
+	width: 150px;
+}
+
 #bitlyInput::-ms-clear {
 	display: none;
 }
@@ -106,6 +115,7 @@
 	right: 325px;
 	max-width: 180px;
 	left:auto;
+	display: none;
 }
 
 .arrow {
