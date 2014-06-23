@@ -172,7 +172,7 @@ var Config = {
 	 * REST endpoints and URL params
 	 *
 	 **************************************************************************/
-	/* temporary token being used for testing */
+	/* temporary token being used for testing per request of project lead / WILL BE REMOVED before deployment /  */
 	"TOKEN": "QzzXsTgBx7VQWeMw6x6J2IVJSZTM2Yw_UzCaSl4tHTlAvet-S2Y-lh75DXng8sZ5R4JRmWb52VMNBljeeJgDzIrc_YjracTeaetxMOPxj83J9N0HPCdHyKjheb6Mf12M1cBgm-nITIH5V56h1-BtBR02ue3FUAj1YRLpeQ0BMIS3e0HRPw3ji30MLcfZYzeY",
 	/* TODO to be removed */
 	"INFO_THUMBNAIL_TOKEN": "?token=" + "QzzXsTgBx7VQWeMw6x6J2IVJSZTM2Yw_UzCaSl4tHTlAvet-S2Y-lh75DXng8sZ5R4JRmWb52VMNBljeeJgDzIrc_YjracTeaetxMOPxj83J9N0HPCdHyKjheb6Mf12M1cBgm-nITIH5V56h1-BtBR02ue3FUAj1YRLpeQ0BMIS3e0HRPw3ji30MLcfZYzeY",
