@@ -788,7 +788,6 @@ require([
 
 			function drawTimeline(data) {
 				filteredData = filterData(data, filter);
-				//console.debug("drawTimeline", filteredData);
 				topic.subscribe("/dnd/drop", function (source, nodes, copy, target) {
 					var layers = [];
 					query(".grid-map").forEach(domConstruct.destroy);
@@ -941,7 +940,7 @@ require([
 								});
 
 								store.put({
-									id:"1",
+									id:1,
 									objID:objID,
 									layer:imageServiceLayer,
 									name:mapName,
@@ -1022,7 +1021,8 @@ require([
 
 			function createOrderedStore(data, options) {
 				// Instantiate a Memory store modified to support ordering.
-				return Observable(new Memory(lang.mixin({data:data,
+				return Observable(new Memory(lang.mixin({
+					data:data,
 					idProperty:"id",
 					put:function (object, options) {
 						object.id = calculateOrder(this, object, options && options.before);
@@ -1077,6 +1077,9 @@ require([
 							beforeOrder = ord;
 						}
 					});
+					console.log("beforeOrder: " + beforeOrder);
+					console.log("afterOrder: " + afterOrder);
+					console.log("BEFORE: " + ((afterOrder + beforeOrder) / 2));
 					return (afterOrder + beforeOrder) / 2;
 				} else {
 					// find maximum order and place this one after it
@@ -1087,6 +1090,7 @@ require([
 							afterOrder = ord;
 						}
 					});
+					console.log("AFTER: " + (afterOrder + 1));
 					return afterOrder + 1;
 				}
 			}
@@ -1378,7 +1382,7 @@ require([
 									'&hashtags=' + Config.SHARING_HASHTAG;
 							window.open('https://twitter.com/intent/tweet?' + options, 'Tweet', 'toolbar=0,status=0,width=626,height=436');
 						});
-						window.open('https://twitter.com/intent/tweet?' + options, 'Tweet', 'toolbar=0,status=0,width=626,height=436');
+				window.open('https://twitter.com/intent/tweet?' + options, 'Tweet', 'toolbar=0,status=0,width=626,height=436');
 			}
 
 			function requestBitly() {
