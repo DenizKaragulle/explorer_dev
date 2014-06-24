@@ -30,12 +30,10 @@
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600,700' rel='stylesheet' type='text/css'>
 
 	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<!--<script src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
-	<script src="http://code.jquery.com/ui/1.10.4/jquery-ui.min.js"></script>-->
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 	<script src="//js.arcgis.com/3.9/init.js"></script>
-	<script src="js/tooltip-min.js"></script>
 	<script src="js/config.js"></script>
+	<script src="js/tooltip-min.js"></script>
 	<script src="js/tmin.js"></script>
 	<script src="js/topoDataExploration.js"></script>
 </head>
@@ -62,11 +60,11 @@
 			<i class="socialIcon-link shareIcon share_bitly" id="bitlyIcon"
 			   title="Get a short link to the application"></i>
 
-			<div class="popover fade left in" data-toggle="popover" data-placement="left" style="display: none;">
+			<div class="popover fade left in" data-toggle="popover" data-placement="left">
 				<div class="arrow"></div>
 				<div class="popover-content" id="bitlyContent">
-					<div style="width:150px; height:30px;">
-						<input id="bitlyInput" type="text" value="" style="width: 150px;">
+					<div class="bitlyInputContainer">
+						<input id="bitlyInput" type="text" value="">
 					</div>
 				</div>
 			</div>
