@@ -60,7 +60,6 @@ require([
 			var map,
 					options,
 					OUTFIELDS,
-					TOKEN,
 					IMAGE_SERVICE_URL,
 					imageServiceLayer,
 					DOWNLOAD_PATH,
@@ -116,9 +115,7 @@ require([
 				parser.parse();
 				document.title = Config.APP_TITLE;
 				OUTFIELDS = Config.OUTFIELDS;
-				// TODO Remove at some point and use OAuth
-				TOKEN = Config.TOKEN;
-				IMAGE_SERVICE_URL = Config.IMAGE_SERVER + Config.IMAGE_SERVER_JSON + TOKEN;
+				IMAGE_SERVICE_URL = Config.IMAGE_SERVER;
 				TOPO_MAP_SCALES = Config.TIMELINE_LEGEND_VALUES;
 				DOWNLOAD_PATH = Config.DOWNLOAD_PATH;
 
@@ -663,7 +660,7 @@ require([
 							var className = setClassname(scale);
 							var lodThreshold = setLodThreshold(scale);
 
-							var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN + "'>" +
+							var tooltipContent = "<img class='tooltipThumbnail' src='" + Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL + "'>" +
 									"<div class='tooltipContainer'>" +
 									"<div class='tooltipHeader'>" + mapName + " (" + dateCurrent + ")</div>" +
 									"<div class='tooltipContent'>" + citation + "</div></div>";
@@ -756,7 +753,7 @@ require([
 				var mapName = object.name;
 				var imprintYear = object.imprintYear;
 				var downloadLink = object.downloadLink;
-				var imgSrc = Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL + Config.INFO_THUMBNAIL_TOKEN;
+				var imgSrc = Config.IMAGE_SERVER + "/" + objID + Config.INFO_THUMBNAIL;
 
 				return domConstruct.create("div", {
 					"class":"renderedCell",
@@ -794,6 +791,7 @@ require([
 					query(".dgrid-row").forEach(function (node) {
 						var row = target.grid.row(node);
 						if (row) {
+							console.log(row.data.id + "\t" + row.data.name + "\t" + row.data.imprintYear);
 							layers.push(row.data.layer);
 							map.removeLayer(row.data.layer);
 
@@ -1030,6 +1028,7 @@ require([
 					},
 					// Memory's add does not need to be augmented since it calls put
 					copy:function (object, options) {
+						console.log("COPY");
 						// summary:
 						//		Given an item already in the store, creates a copy of it.
 						//		(i.e., shallow-clones the item sans id, then calls add)
@@ -1067,7 +1066,6 @@ require([
 				if (!orderField) {
 					orderField = "id";
 				}
-
 				if (before) {
 					// calculate midpoint between two items' orders to fit this one
 					afterOrder = before[orderField];
@@ -1077,9 +1075,6 @@ require([
 							beforeOrder = ord;
 						}
 					});
-					console.log("beforeOrder: " + beforeOrder);
-					console.log("afterOrder: " + afterOrder);
-					console.log("BEFORE: " + ((afterOrder + beforeOrder) / 2));
 					return (afterOrder + beforeOrder) / 2;
 				} else {
 					// find maximum order and place this one after it
@@ -1090,7 +1085,6 @@ require([
 							afterOrder = ord;
 						}
 					});
-					console.log("AFTER: " + (afterOrder + 1));
 					return afterOrder + 1;
 				}
 			}

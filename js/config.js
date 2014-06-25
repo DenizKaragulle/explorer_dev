@@ -4,7 +4,7 @@ var Config = {
 	 * Browser window title (text that will show up in the browser bookmarks)
 	 *
 	 ***************************************************************************/
-	"APP_TITLE": "USGS Archival Topographic Map Explorer",
+	"APP_TITLE": "USGS Historical Topographic Map Explorer",
 
 	/**************************************************************************
 	 *
@@ -172,18 +172,13 @@ var Config = {
 	 * REST endpoints and URL params
 	 *
 	 **************************************************************************/
-	/* temporary token being used for testing per request of project lead / WILL BE REMOVED before deployment /  */
-	"TOKEN": "QzzXsTgBx7VQWeMw6x6J2IVJSZTM2Yw_UzCaSl4tHTlAvet-S2Y-lh75DXng8sZ5R4JRmWb52VMNBljeeJgDzIrc_YjracTeaetxMOPxj83J9N0HPCdHyKjheb6Mf12M1cBgm-nITIH5V56h1-BtBR02ue3FUAj1YRLpeQ0BMIS3e0HRPw3ji30MLcfZYzeY",
-	/* TODO to be removed */
-	"INFO_THUMBNAIL_TOKEN": "?token=" + "QzzXsTgBx7VQWeMw6x6J2IVJSZTM2Yw_UzCaSl4tHTlAvet-S2Y-lh75DXng8sZ5R4JRmWb52VMNBljeeJgDzIrc_YjracTeaetxMOPxj83J9N0HPCdHyKjheb6Mf12M1cBgm-nITIH5V56h1-BtBR02ue3FUAj1YRLpeQ0BMIS3e0HRPw3ji30MLcfZYzeY",
-
 	/* path to thumbnails on Image Service */
 	"INFO_THUMBNAIL": "/info/thumbnail",
 	/* TODO Change name/description */
 	"IMAGE_SERVER_JSON": "?culture=en&f=json&token=",
 
 	/* Image service */
-	"IMAGE_SERVER": "http://historical1.arcgis.com/arcgis/rest/services/USA_Historical_Topo_Maps/ImageServer",
+	"IMAGE_SERVER": "http://utility.arcgis.com/usrsvcs/servers/f0ccaa1db1e5457397d22847d66f7de1/rest/services/USA_Historical_Topo_Maps/ImageServer",
 	/* outfields */
 	"OUTFIELDS": ['*'],
 	/* WHERE clause */
