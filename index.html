@@ -16,97 +16,79 @@
 
 	<link rel="stylesheet" href="//js.arcgis.com/3.9/js/dojo/dijit/themes/nihilo/nihilo.css"/>
 	<link rel="stylesheet" href="//js.arcgis.com/3.9/js/esri/css/esri.css"/>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
-	<link rel="stylesheet" type="text/css" href="css/tooltip.css"/>
-	<link rel="stylesheet" type="text/css" href="css/themes/tooltipster-shadow.css"/>
-	<link rel="stylesheet" type="text/css" href="css/slider.css"/>
-	<link rel="stylesheet" type="text/css" href="css/layout.css"/>
-	<link rel="stylesheet" type="text/css" href="css/timeline.css"/>
-	<link rel="stylesheet" type="text/css" href="css/timelineItem.css"/>
-	<link rel="stylesheet" type="text/css" href="css/grid.css"/>
-	<link rel="stylesheet" type="text/css" href="css/social.css"/>
-	<link rel="stylesheet" type="text/css" href="css/timelineLegend.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600,700' rel='stylesheet' type='text/css'>
+	<style>
+		html, body {
+			height: 100%;
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			font-family: 'Open Sans', sans-serif;
+			/*font-family: 'open_sansregular', sans-serif;*/
+			color: #333;
+			font-size: 1.0em;
+		}
 
-	<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		body {
+			overflow: hidden;
+		}
+
+		.container {
+			margin-top: 10px;
+			text-align:center;
+			padding: 10px;
+		}
+
+		.redirect-image {
+			text-align: center;
+			margin-top: 50px;
+			padding-bottom: 10px;
+		}
+	</style>
+
 	<script src="//js.arcgis.com/3.9/init.js"></script>
-	<script src="js/config.js"></script>
-	<script src="js/tooltip-min.js"></script>
-	<script src="js/tmin.js"></script>
-	<script src="js/topoDataExploration.js"></script>
+
+	<script>
+		require([
+			"dojo/dom",
+			"dojo/parser",
+			"dojo/domReady!"
+		], function (dom, parser) {
+			var timeLeft = 3,
+					cinterval;
+
+			var timeDec = function () {
+				timeLeft--;
+				dom.byId('countdown').innerHTML = timeLeft;
+				if (timeLeft === 0) {
+					clearInterval(cinterval);
+					dom.byId("secondsText").innerHTML = "";
+					var urlStr = window.location.href;
+					var queryObj = urlStr.split("?")[1];
+					if (queryObj !== undefined) {
+						window.location.replace("http://historicalmaps.arcgis.com/usgs/index.html" + "?" + queryObj);
+					} else {
+						window.location.replace("http://historicalmaps.arcgis.com/usgs/index.html");
+					}
+				} else if (timeLeft === 1) {
+					dom.byId("secondsText").innerHTML = "second...";
+				} else if (timeLeft > 1) {
+					dom.byId("secondsText").innerHTML = "seconds...";
+				}
+			};
+
+			cinterval = setInterval(timeDec, 1000);
+		});
+
+	</script>
 </head>
 
 <body class="nihilo">
-<!-- main window -->
-<div id="main-window" data-dojo-type="dijit.layout.BorderContainer"
-	 data-dojo-props="design:'headline', liveSplitters:true, gutters:false">
-
-	<!-- header -->
-	<div class="header" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'top'">
-		<a href="http://www.esri.com/" target="_blank">
-			<img class="header-logo" src="images/esri.png">
-		</a>
-		<a href="http://www.usgs.gov/" target="_blank">
-			<img class="header-logo" src="images/usgswhite.green.jpg">
-		</a>
-		<div class="header-title"></div>
-		<div class="subheader-title"></div>
-
-		<div id="social">
-			<i class="shareIcon share_facebook socialIcon-facebook-squared-1"></i>
-			<i class="socialIcon-twitter-1 shareIcon share_twitter"></i>
-			<i class="socialIcon-link shareIcon share_bitly" id="bitlyIcon"
-			   title="Get a short link to the application"></i>
-
-			<div class="popover fade left in" data-toggle="popover" data-placement="left">
-				<div class="arrow"></div>
-				<div class="popover-content" id="bitlyContent">
-					<div class="bitlyInputContainer">
-						<input id="bitlyInput" type="text" value="">
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<!-- sidebar container -->
-	<div class="sidebar" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'left'">
-		<!-- STEP ONE -->
-		<div class="halfCircleRight stepOne step-one-half-circle-msg"></div>
-		<div class="message-container step-one-message"></div>
-		<div id="geocoder"></div>
-		<!-- STEP TWO -->
-		<div class="halfCircleRight stepTwo step-two-half-circle-msg"></div>
-		<div class="message-container step-two-message"></div>
-		<!-- GRID CONTAINER / STEP THREE / GRID -->
-		<div class="gridContainer">
-			<div class="halfCircleRight stepThree step-three-half-circle-msg"></div>
-			<div class="message-container step-three-message"></div>
-			<div id="grid"></div>
-		</div>
-	</div>
-
-	<!-- map container -->
-	<div id="map" data-dojo-type="dijit.layout.ContentPane" data-dojo-props="region:'center', splitter:true">
-		<img id="loadingImg" src="images/loading2.gif"/>
-	</div>
-
-	<!-- timeline container -->
-	<div id="timeline-container" data-dojo-type="dijit.layout.ContentPane"
-		 data-dojo-props="region:'bottom', splitter:true">
-		<!-- timeline legend -->
-		<div class="timeline-legend-container">
-			<!--<div class="message-container"></div>-->
-			<div class="timeline-legend-header"></div>
-			<div class="btn-group btn-group-vertical topo-legend" data-toggle="buttons"></div>
-		</div>
-		<!--<div class="timelineDisableMessageContainer"></div>-->
-		<div class="timeline-message"></div>
-		<!-- timeline -->
-		<div id="timeline"></div>
-	</div>
+<div class="redirect-image" >
+	<img src="images/Topo_Redirect_Art.jpg.jpeg" >
+</div>
+<div class="container">
+	Redirecting in <span id="countdown">3</span> <span id="secondsText"></span>
 </div>
 </body>
 </html>
