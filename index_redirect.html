@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<!--Define the versions of IE that will be used to render the page. See Microsoft documentation for details. Optional.-->
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+	<!-- Responsive -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<!-- End Responsive -->
+	<!-- SEO -->
+	<meta name="Keywords" content="USGS, Topographic Maps, Historical Maps, Map, Esri"/>
+	<meta name="Description" content="This interactive map..."/>
+
+	<link rel="stylesheet" href="//js.arcgis.com/3.9/js/dojo/dijit/themes/nihilo/nihilo.css"/>
+	<link rel="stylesheet" href="//js.arcgis.com/3.9/js/esri/css/esri.css"/>
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:300,600,700' rel='stylesheet' type='text/css'>
+	<style>
+		html, body {
+			height: 100%;
+			width: 100%;
+			margin: 0;
+			padding: 0;
+			font-family: 'Open Sans', sans-serif;
+			/*font-family: 'open_sansregular', sans-serif;*/
+			color: #333;
+			font-size: 1.0em;
+		}
+
+		body {
+			overflow: hidden;
+		}
+
+		.container {
+			margin-top: 10px;
+			text-align:center;
+			padding: 10px;
+		}
+
+		.redirect-image {
+			text-align: center;
+			margin-top: 50px;
+			padding-bottom: 10px;
+		}
+	</style>
+
+	<script src="//js.arcgis.com/3.9/init.js"></script>
+
+	<script>
+		require([
+			"dojo/dom",
+			"dojo/parser",
+			"dojo/domReady!"
+		], function (dom, parser) {
+			var timeLeft = 5,
+					cinterval;
+
+			var timeDec = function () {
+				timeLeft--;
+				dom.byId('countdown').innerHTML = timeLeft;
+				if (timeLeft === 0) {
+					clearInterval(cinterval);
+					var urlStr = window.location.href;
+					var queryObj = urlStr.split("?")[1];
+					if (queryObj !== undefined) {
+						window.location.replace("http://historicalmaps.arcgis.com/usgs/index.html" + "?" + queryObj);
+					} else {
+						window.location.replace("http://historicalmaps.arcgis.com/usgs/index.html");
+					}
+				} else if (timeLeft === 1) {
+					dom.byId("secondsText").innerHTML = "second...";
+				} else if (timeLeft > 1) {
+					dom.byId("secondsText").innerHTML = "seconds...";
+				}
+			};
+
+			cinterval = setInterval(timeDec, 1000);
+		});
+
+	</script>
+</head>
+
+<body class="nihilo">
+<div class="redirect-image" >
+	<img src="images/Topo_Redirect_Art.jpg.jpeg" >
+</div>
+<div class="container">
+	Redirecting in <span id="countdown">5</span> <span id="secondsText"></span>
+</div>
+</body>
+</html>
