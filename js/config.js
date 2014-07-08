@@ -35,7 +35,7 @@ var Config = {
 	 *
 	 **************************************************************************/
 	/* Step 1 */
-	"STEP_ONE_MESSAGE": "<span style='font-weight: bold'>Go</span> to a location to the location you want to explore, then <br/><span style='font-weight: bold'>Click</span> on a place to see its historical maps.",
+	"STEP_ONE_MESSAGE": "<span style='font-weight: bold'>Go</span> to a place you want to explore, then <br/><span style='font-weight: bold'>Click</span> on a place to see its historical maps.",
 	"STEP_ONE_HALF_CIRCLE_MSG": "1",
 	/* Step 2 */
 	"STEP_TWO_MESSAGE": "<span style='font-weight: bold'>Click</span> timeline maps to view in main window.",
